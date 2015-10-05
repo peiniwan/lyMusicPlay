@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="title">#EBEBEB</color>
+    <color name="list">#EFEFEF</color>
+    <color name="minimusic">#19608D</color>
+    <color name="tvcolor">#000000</color>
+
+</resources>
