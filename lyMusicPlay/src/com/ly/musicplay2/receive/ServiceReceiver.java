@@ -4,12 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.RemoteViews;
-import android.widget.Toast;
 
-import com.ly.musicplay2.R;
 import com.ly.musicplay2.fragment.ContentFragment;
-import com.ly.musicplay2.service.BackgroundService;
 
 public class ServiceReceiver extends BroadcastReceiver {
 	public static final String NOTIFICATION_ITEM_BUTTON_PER = "com.example.notification.ServiceReceiver.per";// ----通知栏上一首按钮

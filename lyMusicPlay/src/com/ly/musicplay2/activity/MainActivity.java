@@ -11,7 +11,6 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.ly.musicplay2.R;
 import com.ly.musicplay2.fragment.ContentFragment;
-import com.ly.musicplay2.fragment.NotifactionFargment;
 import com.ly.musicplay2.fragment.RightMenuFragment;
 
 /**
@@ -88,7 +87,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		mContent = fragment;
 		getFragmentManager().beginTransaction()
 				.replace(R.id.fl_content, fragment).addToBackStack(null)
-				.commit();//加上这个addToBackStack(null)，ondestory不会调用
+				.commit();// 加上这个addToBackStack(null)，ondestory不会调用
 		getSlidingMenu().showContent();
 
 	}

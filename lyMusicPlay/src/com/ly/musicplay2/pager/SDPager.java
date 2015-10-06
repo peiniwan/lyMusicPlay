@@ -46,10 +46,10 @@ public class SDPager extends BasePager {
 	public static int songNum; // 当前播放的歌曲在List中的下标
 	private ListView lv_sd;
 
-	public static musicAdapter mAdapter;
-	public static ServiceReceiver receiver;
+	public static musicAdapter mAdapter;// 歌曲列表的adapter
+	public static ServiceReceiver receiver;// 通知栏广播
 	private static NotificationManager manager;
-	public static TextView title_music_name;
+	public static TextView title_music_name;// 通知歌曲名字
 
 	public SDPager(Activity activity) {
 		super(activity);
@@ -107,10 +107,13 @@ public class SDPager extends BasePager {
 
 	}
 
+	/**
+	 * 设置通知栏界面和按钮意图
+	 */
 	public static void showCustomView() {
 		Log.d("showCustomView", "执行了");
 		RemoteViews remoteViews = new RemoteViews(mActivity.getPackageName(),
-				R.layout.notyfiction);
+				R.layout.notyfiction);// 通知栏上只能用这个view
 		remoteViews.setTextViewText(R.id.title_music_name,
 				BackgroundService.songName); // 设置textview
 

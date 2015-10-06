@@ -2,8 +2,6 @@ package com.ly.musicplay2.service;
 
 import java.io.File;
 
-import org.apache.http.HttpException;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Environment;

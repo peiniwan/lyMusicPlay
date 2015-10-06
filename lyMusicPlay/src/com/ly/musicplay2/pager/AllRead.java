@@ -1,7 +1,6 @@
 package com.ly.musicplay2.pager;
 
 import android.app.Activity;
-import android.view.View;
 
 public class AllRead extends BasePager {
 

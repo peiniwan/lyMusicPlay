@@ -15,14 +15,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 import android.telephony.TelephonyManager;
-import android.text.BoringLayout;
 import android.util.Log;
-import android.view.View;
 
 import com.ly.musicplay2.R;
 import com.ly.musicplay2.fragment.ContentFragment;
 import com.ly.musicplay2.pager.SDPager;
-import com.ly.musicplay2.receive.PhoneReceiver;
 
 /**
  * 后台播放服务

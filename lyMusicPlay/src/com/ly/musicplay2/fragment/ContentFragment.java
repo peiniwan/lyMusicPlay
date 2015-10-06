@@ -2,18 +2,13 @@ package com.ly.musicplay2.fragment;
 
 import java.util.ArrayList;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -25,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -34,10 +28,8 @@ import com.ly.musicplay2.R;
 import com.ly.musicplay2.pager.BasePager;
 import com.ly.musicplay2.pager.HttpPager;
 import com.ly.musicplay2.pager.SDPager;
-import com.ly.musicplay2.receive.ServiceReceiver;
 import com.ly.musicplay2.service.BackgroundService;
 import com.ly.musicplay2.service.MusicInterface;
-import com.ly.musicplay2.view.FocusedTextView;
 
 /**
  * 音乐中心
