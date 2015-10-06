@@ -25,7 +25,6 @@ public class SplashActivity extends Activity {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.setClass(SplashActivity.this, MainActivity.class);
 				SplashActivity.this.startActivity(intent);
