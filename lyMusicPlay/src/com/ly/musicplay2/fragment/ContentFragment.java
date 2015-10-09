@@ -318,7 +318,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		seekbar.setMax(0);
 		mActivity.unregisterReceiver(SDPager.receiver);
 		mActivity.unbindService(conn);// 想点击退出时调用此方法，可是这行会报空指针，
-		// 如果把这行和下一行去掉的话，点退出可以停止音乐了，可是再进软件点歌没反应,解决了.不用new，直接调用
+		// 如果把这行和下一行去掉的话，点退出可以停止音乐了，可是再进软件点歌没反应.解决了.不用new，直接调用
 		mActivity.stopService(intent);
 	}
 }

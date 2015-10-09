@@ -159,29 +159,30 @@ public class SDPager extends BasePager {
 		stackBuilder.addParentStack(MainActivity.class);
 		stackBuilder.addNextIntent(resultIntent);
 		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent.FLAG_UPDATE_CURRENT);// 表示更新的PendingIntent
 		remoteViews.setOnClickPendingIntent(R.id.songer_pic,
+				resultPendingIntent);// ----设置对应的按钮ID监控
+		remoteViews.setOnClickPendingIntent(R.id.title_music_name,
 				resultPendingIntent);// ----设置对应的按钮ID监控
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(
 				mActivity);
 		builder.setContent(remoteViews)
-				.setSmallIcon(R.drawable.ic_notification)
-				.setOngoing(true)
-				.setTicker("music is playing")
-				.setContentIntent(
-						getDefalutIntent(Notification.FLAG_ONGOING_EVENT));
+				.setSmallIcon(R.drawable.ic_notification).setOngoing(true)
+				.setTicker("music is playing");
+		// .setContentIntent(
+		// getDefalutIntent(Notification.FLAG_ONGOING_EVENT));
 		Notification notify = builder.build();
-		notify.flags = Notification.FLAG_ONGOING_EVENT;
+		notify.flags = Notification.FLAG_ONGOING_EVENT;// 发起正在运行事件（活动中）
 		manager.notify(1, notify);
 
 	}
 
-	public static PendingIntent getDefalutIntent(int flags) {
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(mActivity, 1,
-				new Intent(), flags);
-		return pendingIntent;
-	}
+	// public static PendingIntent getDefalutIntent(int flags) {
+	// PendingIntent pendingIntent = PendingIntent.getBroadcast(mActivity, 1,
+	// new Intent(), flags);
+	// return pendingIntent;
+	// }
 
 	/**
 	 * 歌曲列表
