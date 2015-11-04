@@ -36,7 +36,6 @@ public class MainActivity extends SlidingFragmentActivity {
 	/**
 	 * 初始化SlidingMenu
 	 * 
-	 * @param savedInstanceState
 	 */
 	private void initSlidingMenu(Bundle savedInstanceState) {
 		// 如果保存的状态不为空则得到之前保存的Fragment，否则实例化Fragment
