@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ly.musicplay2"
+    package="com.ly.musicplay"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -39,7 +39,7 @@
             android:value="AuWu11GvW5mAlqhaZ13d0m8W" />
 
         <activity
-            android:name="com.ly.musicplay2.activity.SplashActivity"
+            android:name="com.ly.musicplay.activity.SplashActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,6 +50,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:theme="@style/Theme.PageIndicatorDefaults" />
+        <activity android:name=".activity.DetilsMusicActivity" />
 
         <service android:name=".service.BackgroundService" >
         </service>

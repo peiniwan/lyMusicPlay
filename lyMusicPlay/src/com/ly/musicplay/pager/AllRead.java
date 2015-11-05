@@ -1,0 +1,20 @@
+package com.ly.musicplay.pager;
+
+import android.app.Activity;
+
+public class AllRead extends BasePager {
+
+	public AllRead(Activity activity) {
+		super(activity);
+	}
+	@Override
+	public void initViews() {
+		super.initViews();
+	}
+	@Override
+	public void initData() {
+		super.initData();
+//	View.inflate(mActivity, resource, null);
+	}
+
+}

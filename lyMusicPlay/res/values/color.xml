@@ -5,5 +5,7 @@
     <color name="list">#EFEFEF</color>
     <color name="minimusic">#19608D</color>
     <color name="tvcolor">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
 
 </resources>
