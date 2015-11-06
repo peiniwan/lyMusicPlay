@@ -1,7 +1,6 @@
 package com.ly.musicplay.activity;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,11 +14,10 @@ import android.widget.TextView;
 import com.ly.musicplay.R;
 import com.ly.musicplay.receive.ServiceReceiver;
 import com.ly.musicplay.service.BackgroundService;
-import com.ly.musicplay.view.PushView;
 
 public class DetilsMusicActivity extends Activity implements OnClickListener {
 	private ImageButton returnMain;
-	private PushView detil_name;
+	public static TextView detil_name;
 	private TextView detil_current;
 	private TextView detil_total;
 	private SeekBar detil_seek;
@@ -37,7 +35,6 @@ public class DetilsMusicActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_detil_music);
 		initView();
 		detil_name.setText(BackgroundService.songName);
-
 		returnMain.setOnClickListener(this);
 		detil_pre.setOnClickListener(this);
 		detil_play.setOnClickListener(this);
@@ -46,7 +43,7 @@ public class DetilsMusicActivity extends Activity implements OnClickListener {
 
 	private void initView() {
 		returnMain = (ImageButton) findViewById(R.id.detil_return);
-		detil_name = (PushView) findViewById(R.id.detil_name);
+		detil_name = (TextView) findViewById(R.id.detil_name);
 		detil_current = (TextView) findViewById(R.id.detil_current);
 		detil_total = (TextView) findViewById(R.id.detil_total);
 		detil_seek = (SeekBar) findViewById(R.id.detil_seek);
@@ -70,16 +67,24 @@ public class DetilsMusicActivity extends Activity implements OnClickListener {
 		case R.id.detil_pre:
 			intent.setAction(ServiceReceiver.NOTIFICATION_ITEM_BUTTON_PER);
 			sendBroadcast(intent);
-			detil_name.setText(BackgroundService.songName);
+			// detil_name.setText(BackgroundService.songName);
+			// System.out.println("DetilsMusicActivity歌名"
+			// + BackgroundService.songName);//
+			// 这样写BackgroundService.songName在服务里输出的和这里不一样,并且少了.mp3后缀
 			break;
 		case R.id.detil_play:
 			intent.setAction(ServiceReceiver.NOTIFICATION_ITEM_BUTTON_PLAY);
 			sendBroadcast(intent);
+			if (BackgroundService.mediaPlayer.isPlaying()) {
+				detil_play.setImageResource(R.drawable.player_btn_play_style);
+			} else {
+				detil_play.setImageResource(R.drawable.player_btn_pause_style);
+			}
+
 			break;
 		case R.id.detil_next:
 			intent.setAction(ServiceReceiver.NOTIFICATION_ITEM_BUTTON_NEXT);
 			sendBroadcast(intent);
-			detil_name.setText(BackgroundService.songName);
 			break;
 
 		default:

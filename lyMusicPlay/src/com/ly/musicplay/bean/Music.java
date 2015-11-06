@@ -84,18 +84,35 @@ public class Music {
 
 	private long id;
 
-	@Override
-	public String toString() {
-		return "Music [id=" + id + ", title=" + title + ", arrtist=" + arrtist
-				+ ", album=" + album + ", size=" + size + ", duration="
-				+ duration + ", url=" + url + ", name=" + name + "]";
+	public Music(long id, String title, String arrtist, String album,
+			String albumId, long size, long duration, String url, String name) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.arrtist = arrtist;
+		this.album = album;
+		this.albumId = albumId;
+		this.size = size;
+		this.duration = duration;
+		this.url = url;
+		this.name = name;
 	}
 
 	private String title;
 	private String arrtist;
 	private String album;
+	private String albumId;
 	private long size;
 	private long duration;
 	private String url;
 	private String name;
+
+	public String getAlbumId() {
+		return albumId;
+	}
+
+	public void setAlbumId(String albumId) {
+		this.albumId = albumId;
+	}
+
 }

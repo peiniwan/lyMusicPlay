@@ -16,12 +16,9 @@
             android:id="@+id/detil_return"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/player_btn_return_style"
-            android:contentDescription="@string/app_name" />
+            android:background="@drawable/player_btn_return_style" />
 
-        <!-- 注意！PushView可以直接使用TextView的属性，但是不会出现帮助，需要自己去TextView里复制 -->
-
-        <com.ly.musicplay.view.PushView
+        <TextView
             android:id="@+id/detil_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -43,7 +40,6 @@
         android:layout_height="125.0dip"
         android:layout_centerInParent="true"
         android:background="@drawable/player_cover_bg"
-        android:contentDescription="@string/app_name"
         android:padding="3.0dip"
         android:src="@drawable/player_cover_default" />
 
@@ -96,16 +92,12 @@
             android:paddingLeft="7.0dip"
             android:paddingRight="7.0dip" >
 
-            <!-- 这里出现问题，android:background引用color里的transparent并没达到透明效果，搞不清楚什么原因 -->
-            <!-- 原因已经找到，在raw文件夹下放了图片资源，竟然能影响到颜色，在raw文件夹下的图片会降低质量 -->
-
             <ImageButton
                 android:id="@+id/detil_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparent"
-                android:contentDescription="@string/app_name"
                 android:src="@drawable/player_btn_mode_normal_style" />
 
             <ImageButton
@@ -114,7 +106,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparent"
-                android:contentDescription="@string/app_name"
                 android:src="@drawable/player_btn_previous_style" />
 
             <ImageButton
@@ -123,7 +114,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparent"
-                android:contentDescription="@string/app_name"
                 android:src="@drawable/player_btn_play_style" />
 
             <ImageButton
@@ -132,7 +122,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparent"
-                android:contentDescription="@string/app_name"
                 android:src="@drawable/player_btn_next_style" />
 
             <ImageButton
@@ -141,7 +130,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparent"
-                android:contentDescription="@string/app_name"
                 android:src="@drawable/player_btn_favorite_nostar_style" />
         </LinearLayout>
     </LinearLayout>

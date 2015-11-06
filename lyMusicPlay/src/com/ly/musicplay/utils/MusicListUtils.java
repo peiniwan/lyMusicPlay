@@ -50,11 +50,13 @@ public class MusicListUtils {
 						.getColumnIndex(MediaStore.Audio.Media.DATA)); // 音乐文件的路径
 				String name = cursor.getString(cursor
 						.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));// 音乐文件名
+				String albumId = cursor.getString(cursor
+						.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));// 音乐文件名
 				if (duration >= 1000 && duration <= 900000) {
 					// 此处添加music，音乐信息，到列表
-					Music music = new Music(id, title, arrtist, album, size,
+					Music music = new Music(id, title, arrtist, albumId, size,
 							duration, url, name);
-//					System.out.println(music.toString());
+					// System.out.println(music.toString());
 					musiclist.add(music);
 				}
 			} while (cursor.moveToNext());

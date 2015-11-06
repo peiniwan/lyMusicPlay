@@ -1,6 +1,7 @@
 package com.ly.musicplay.service;
 
 import java.io.File;
+import java.util.List;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -18,8 +19,11 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.ly.musicplay.R;
+import com.ly.musicplay.activity.DetilsMusicActivity;
+import com.ly.musicplay.bean.Music;
 import com.ly.musicplay.fragment.ContentFragment;
 import com.ly.musicplay.pager.SDPager;
+import com.ly.musicplay.utils.MusicListUtils;
 
 /**
  * 后台播放服务
@@ -49,17 +53,17 @@ public class BackgroundService extends Service {
 		if (mediaPlayer == null) {
 			mediaPlayer = new MediaPlayer();
 		}
-//		phoneReceiver = new PhoneReceiver();
-//		IntentFilter filter = new IntentFilter();
-//		filter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);// 设置拨号动作
-//		registerReceiver(phoneReceiver, filter);// 注册广播
+		// phoneReceiver = new PhoneReceiver();
+		// IntentFilter filter = new IntentFilter();
+		// filter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);// 设置拨号动作
+		// registerReceiver(phoneReceiver, filter);// 注册广播
 
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-//		unregisterReceiver(phoneReceiver);// 取消监听
+		// unregisterReceiver(phoneReceiver);// 取消监听
 		Log.d("BackgroundService", "onDestroy执行了");
 	}
 
@@ -106,6 +110,12 @@ public class BackgroundService extends Service {
 					mediaPlayer.prepare();
 					SDPager.mAdapter.notifyDataSetChanged();
 					ContentFragment.tv_musicname.setText(setPlayName(mp3Path));// 设置当前播放的歌曲名字
+					if (DetilsMusicActivity.detil_name != null) {
+						DetilsMusicActivity.detil_name
+								.setText(setPlayName(mp3Path));
+
+					}
+					getPlayPIC(mp3Path);
 					ContentFragment.play.setImageResource(R.drawable.play);// 设置播放暂停的图片
 					SDPager.showCustomView();
 					mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
@@ -200,7 +210,7 @@ public class BackgroundService extends Service {
 					Log.d("BackgroundService", "判断完后播放的SDPager.songNum "
 							+ SDPager.songNum);
 					songName = SDPager.musicUrlList.get(SDPager.songNum);
-
+					Log.d("BackgroundService", "songName------" + songName);
 					play(songName);
 				}
 			}
@@ -230,6 +240,18 @@ public class BackgroundService extends Service {
 			String name = file.getName();// name=mm.mp3
 			int index = name.lastIndexOf(".");// 找到最后一个.
 			return songName = name.substring(0, index);// 截取歌名
+		}
+
+	}
+
+	public void getPlayPIC(String mp3Path) {
+		List<Music> musicList = MusicListUtils
+				.getMusicList(getApplicationContext());
+		for (int i = 0; i < musicList.size(); i++) {
+			if (mp3Path == musicList.get(i).getUrl()) {
+				System.out.println(i);
+				String albumId = musicList.get(i).getAlbumId();
+			}
 		}
 
 	}
