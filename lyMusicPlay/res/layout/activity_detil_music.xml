@@ -5,6 +5,7 @@
     android:background="@drawable/bg" >
 
     <LinearLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="50.0dip"
         android:gravity="center_vertical"
@@ -36,9 +37,11 @@
 
     <ImageView
         android:id="@+id/detil_pic"
-        android:layout_width="125.0dip"
-        android:layout_height="125.0dip"
-        android:layout_centerInParent="true"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
         android:background="@drawable/player_cover_bg"
         android:padding="3.0dip"
         android:src="@drawable/player_cover_default" />

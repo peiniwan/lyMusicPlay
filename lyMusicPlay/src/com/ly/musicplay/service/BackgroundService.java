@@ -8,11 +8,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.telephony.TelephonyManager;
@@ -23,6 +25,7 @@ import com.ly.musicplay.activity.DetilsMusicActivity;
 import com.ly.musicplay.bean.Music;
 import com.ly.musicplay.fragment.ContentFragment;
 import com.ly.musicplay.pager.SDPager;
+import com.ly.musicplay.utils.MediaUtil;
 import com.ly.musicplay.utils.MusicListUtils;
 
 /**
@@ -34,6 +37,8 @@ public class BackgroundService extends Service {
 	public static MediaPlayer mediaPlayer;
 	public static String songName; // 当前播放的歌曲名
 	private PhoneReceiver phoneReceiver;
+	private static Handler mHandler;
+	public static String currMp3Path;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -102,6 +107,7 @@ public class BackgroundService extends Service {
 	class MusicController extends Binder implements MusicInterface {
 
 		public void play(String mp3Path) {
+			currMp3Path = mp3Path;
 			Log.d("play", "执行了");
 			if (mediaPlayer != null) {
 				mediaPlayer.reset(); // 重置多媒体
@@ -110,12 +116,16 @@ public class BackgroundService extends Service {
 					mediaPlayer.prepare();
 					SDPager.mAdapter.notifyDataSetChanged();
 					ContentFragment.tv_musicname.setText(setPlayName(mp3Path));// 设置当前播放的歌曲名字
-					if (DetilsMusicActivity.detil_name != null) {
+					if (DetilsMusicActivity.detil_name != null
+							&& DetilsMusicActivity.detil_pic != null) {
 						DetilsMusicActivity.detil_name
 								.setText(setPlayName(mp3Path));
-
+						DetilsMusicActivity.detil_pic.setImageBitmap(MediaUtil
+								.getLargeBitmap(mp3Path,
+										getApplicationContext()));
 					}
-					getPlayPIC(mp3Path);
+					ContentFragment.content_iv.setImageBitmap(MediaUtil
+							.getSamllBitmap(mp3Path, getApplicationContext()));
 					ContentFragment.play.setImageResource(R.drawable.play);// 设置播放暂停的图片
 					SDPager.showCustomView();
 					mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
@@ -123,8 +133,7 @@ public class BackgroundService extends Service {
 						@Override
 						public void onPrepared(MediaPlayer mp) {
 							mediaPlayer.start();
-							ContentFragment.handler.post(updateThread);// 递归
-
+							mHandler.post(updateThread);// 递归
 						}
 					});
 
@@ -150,16 +159,16 @@ public class BackgroundService extends Service {
 				int duration = mediaPlayer.getDuration();
 				// 获取歌曲当前播放进度
 				int currentPosition = mediaPlayer.getCurrentPosition();
-				Message msg = ContentFragment.handler.obtainMessage();
+				Message msg = mHandler.obtainMessage();
 
 				// 把进度封装至消息对象中
 				Bundle bundle = new Bundle();
 				bundle.putInt("duration", duration);
 				bundle.putInt("currentPosition", currentPosition);
 				msg.setData(bundle);
-				ContentFragment.handler.sendMessage(msg);
+				mHandler.sendMessage(msg);
 				// 每次延迟100毫秒再启动线程
-				ContentFragment.handler.postDelayed(updateThread, 100);
+				mHandler.postDelayed(updateThread, 100);
 			}
 
 		};
@@ -171,7 +180,7 @@ public class BackgroundService extends Service {
 				mediaPlayer.release();
 				mediaPlayer = null;
 				// 取消线程
-				ContentFragment.handler.removeCallbacks(updateThread);
+				mHandler.removeCallbacks(updateThread);
 			}
 		}
 
@@ -241,19 +250,10 @@ public class BackgroundService extends Service {
 			int index = name.lastIndexOf(".");// 找到最后一个.
 			return songName = name.substring(0, index);// 截取歌名
 		}
-
 	}
 
-	public void getPlayPIC(String mp3Path) {
-		List<Music> musicList = MusicListUtils
-				.getMusicList(getApplicationContext());
-		for (int i = 0; i < musicList.size(); i++) {
-			if (mp3Path == musicList.get(i).getUrl()) {
-				System.out.println(i);
-				String albumId = musicList.get(i).getAlbumId();
-			}
-		}
-
+	public static void setHandler(Handler handler) {
+		mHandler = handler;
 	}
 
 }

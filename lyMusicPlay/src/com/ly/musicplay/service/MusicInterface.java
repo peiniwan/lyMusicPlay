@@ -1,5 +1,7 @@
 package com.ly.musicplay.service;
 
+import android.os.Handler;
+
 public interface MusicInterface {
 	void play(String mp3Path);
 
@@ -14,5 +16,7 @@ public interface MusicInterface {
 	void seekTo(int progress);
 
 	String setPlayName(String dataSource);
+
+//	void setHandler(Handler handler);
 
 }

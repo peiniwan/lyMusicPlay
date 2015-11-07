@@ -1,8 +1,10 @@
 package com.ly.musicplay.utils;
 
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -11,11 +13,87 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+
+import com.ly.musicplay.R;
+import com.ly.musicplay.bean.Music;
 
 public class MediaUtil {
 	// 获取专辑封面的Uri
 	private static final Uri albumArtUri = Uri
 			.parse("content://media/external/audio/albumart");
+
+	/**
+	 * 获取默认专辑图片
+	 * 
+	 * @param context
+	 * @return
+	 */
+	public static Bitmap getDefaultArtwork(Context context, boolean small) {
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inPreferredConfig = Bitmap.Config.RGB_565;
+		if (small) { // 返回小图片
+			return BitmapFactory.decodeStream(context.getResources()
+					.openRawResource(R.drawable.left2), null, opts);
+		}
+		return BitmapFactory.decodeStream(context.getResources()
+				.openRawResource(R.drawable.player_cover_default), null, opts);
+	}
+
+	/**
+	 * 从文件当中获取专辑封面位图
+	 * 
+	 * @param context
+	 * @param songid
+	 * @param albumid
+	 * @return
+	 */
+	private static Bitmap getArtworkFromFile(Context context, long songid,
+			long albumid) {
+		Bitmap bm = null;
+		if (albumid < 0 && songid < 0) {
+			throw new IllegalArgumentException(
+					"Must specify an album or a song id");
+		}
+		try {
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			FileDescriptor fd = null;
+			if (albumid < 0) {
+				Uri uri = Uri.parse("content://media/external/audio/media/"
+						+ songid + "/albumart");
+				ParcelFileDescriptor pfd = context.getContentResolver()
+						.openFileDescriptor(uri, "r");
+				if (pfd != null) {
+					fd = pfd.getFileDescriptor();
+				}
+			} else {
+				Uri uri = ContentUris.withAppendedId(albumArtUri, albumid);
+				ParcelFileDescriptor pfd = context.getContentResolver()
+						.openFileDescriptor(uri, "r");
+				if (pfd != null) {
+					fd = pfd.getFileDescriptor();
+				}
+			}
+			options.inSampleSize = 1;
+			// 只进行大小判断
+			options.inJustDecodeBounds = true;
+			// 调用此方法得到options得到图片大小
+			BitmapFactory.decodeFileDescriptor(fd, null, options);
+			// 我们的目标是在800pixel的画面上显示
+			// 所以需要调用computeSampleSize得到图片缩放的比例
+			options.inSampleSize = 100;
+			// 我们得到了缩放的比例，现在开始正式读入Bitmap数据
+			options.inJustDecodeBounds = false;
+			options.inDither = false;
+			options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+			// 根据options参数，减少所需要的内存
+			bm = BitmapFactory.decodeFileDescriptor(fd, null, options);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return bm;
+	}
 
 	/**
 	 * 获取专辑封面位图对象
@@ -26,8 +104,20 @@ public class MediaUtil {
 	 * @param allowdefalut
 	 * @return
 	 */
-	public static Bitmap getArtwork(Context context, long album_id,
-			boolean small) {
+	public static Bitmap getArtwork(Context context, long song_id,
+			long album_id, boolean allowdefalut, boolean small) {
+		if (album_id < 0) {
+			if (song_id < 0) {
+				Bitmap bm = getArtworkFromFile(context, song_id, -1);
+				if (bm != null) {
+					return bm;
+				}
+			}
+			if (allowdefalut) {
+				return getDefaultArtwork(context, small);
+			}
+			return null;
+		}
 		ContentResolver res = context.getContentResolver();
 		Uri uri = ContentUris.withAppendedId(albumArtUri, album_id);
 		if (uri != null) {
@@ -44,7 +134,7 @@ public class MediaUtil {
 				/** 我们的目标是在你N pixel的画面上显示。 所以需要调用computeSampleSize得到图片缩放的比例 **/
 				/** 这里的target为800是根据默认专辑图片大小决定的，800只是测试数字但是试验后发现完美的结合 **/
 				if (small) {
-					options.inSampleSize = computeSampleSize(options, 40);
+					options.inSampleSize = computeSampleSize(options, 70);
 				} else {
 					options.inSampleSize = computeSampleSize(options, 600);
 				}
@@ -55,7 +145,18 @@ public class MediaUtil {
 				in = res.openInputStream(uri);
 				return BitmapFactory.decodeStream(in, null, options);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				Bitmap bm = getArtworkFromFile(context, song_id, album_id);
+				if (bm != null) {
+					if (bm.getConfig() == null) {
+						bm = bm.copy(Bitmap.Config.RGB_565, false);
+						if (bm == null && allowdefalut) {
+							return getDefaultArtwork(context, small);
+						}
+					}
+				} else if (allowdefalut) {
+					bm = getDefaultArtwork(context, small);
+				}
+				return bm;
 			} finally {
 				try {
 					if (in != null) {
@@ -96,5 +197,43 @@ public class MediaUtil {
 			}
 		}
 		return candidate;
+	}
+
+	public static Bitmap getSamllBitmap(String mp3Path, Context context) {
+		List<Music> musicList = MusicListUtils.getMusicList(context);
+		for (Music music : musicList) {
+			if (mp3Path.equals(music.getUrl())) {
+				long albumId = music.getAlbumId();
+				long id = music.getId();
+				System.out.println("albumId" + albumId);
+				System.out.println("Id" + id);
+				Bitmap bitmap = getArtwork(context, id, albumId, true, true);
+				System.out.println("getSamllBitmap---bitmap--------"
+						+ bitmap.getHeight());
+				// Bitmap bitmap = MediaUtil.getArtwork(getApplicationContext(),
+				// albumId, true);
+				return bitmap;
+			}
+		}
+		return null;
+	}
+
+	public static Bitmap getLargeBitmap(String mp3Path, Context context) {
+		List<Music> musicList = MusicListUtils.getMusicList(context);
+		for (Music music : musicList) {
+			if (mp3Path.equals(music.getUrl())) {
+				long albumId = music.getAlbumId();
+				long id = music.getId();
+				System.out.println("albumId" + albumId);
+				System.out.println("Id" + id);
+				Bitmap bitmap = getArtwork(context, id, albumId, true, false);
+				System.out.println("getLargeBitmap---bitmap--------"
+						+ bitmap.getHeight());
+				// Bitmap bitmap = MediaUtil.getArtwork(getApplicationContext(),
+				// albumId, true);
+				return bitmap;
+			}
+		}
+		return null;
 	}
 }

@@ -56,7 +56,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 	public static MusicInterface mi;// 访问服务的方法
 	public static MyServiceConn conn;// 绑定服务时要实现的
 
-	public static Handler handler = new Handler() {
+	public Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			Bundle bundle = msg.getData();
 			int duration = bundle.getInt("duration");// 总时长
@@ -69,6 +69,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		};
 	};
 	public static TextView tv_musicname; // 显示正在播放的歌曲名称，在服务里设置
+	public static ImageView content_iv;
 
 	/**
 	 * 初始化布局
@@ -83,17 +84,17 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		ly = (LinearLayout) v.findViewById(R.id.ly);
 		tv_musicname = (TextView) v.findViewById(R.id.tv_musicname);
 		tv_progress = (TextView) v.findViewById(R.id.tv_progress);
+		seekbar = (SeekBar) v.findViewById(R.id.sb);
 
 		pre = (ImageView) v.findViewById(R.id.pre); // 实例化上一首歌的按钮控件
 		play = (ImageView) v.findViewById(R.id.play); // 实例化播放的按钮控件
-		stop = (ImageView) v.findViewById(R.id.play_mode_all); // 实例化停止的按钮控件
 		next = (ImageView) v.findViewById(R.id.next); // 实例化下一首歌的按钮控件
-		seekbar = (SeekBar) v.findViewById(R.id.sb); // 实例化进度条的按钮控件
+		content_iv = (ImageView) v.findViewById(R.id.album_pic);
 
 		pre.setOnClickListener(this); // 设置上一首歌的监听器
 		play.setOnClickListener(this); // 设置播放按钮的监听器
 		next.setOnClickListener(this); // 设置下一首歌按钮的监听器
-		stop.setOnClickListener(this); // 设置停止按钮的监听器
+
 		ly.setOnClickListener(this);
 		return v;
 	}
@@ -104,10 +105,11 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 	@Override
 	public void initData() {
 
-		conn = new MyServiceConn();
 		intent = new Intent(mActivity, BackgroundService.class);
+		conn = new MyServiceConn();
 		mActivity.startService(intent);// 开启后台播放服务
 		mActivity.bindService(intent, conn, Context.BIND_AUTO_CREATE);
+		BackgroundService.setHandler(handler);
 
 		rgGroup.check(R.id.rb_sd);// 让RedioButton默认勾选第一页
 		mPagerList = new ArrayList<BasePager>();// 存放viewpager
@@ -249,7 +251,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 			break;
 		case R.id.ly:
 			Intent in = new Intent(mActivity, DetilsMusicActivity.class);
-//			in.putExtra(name, value);
+			// in.putExtra(name, value);
 			startActivity(in);
 			break;
 		}
@@ -307,6 +309,16 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 	// 获取sd页
 	public SDPager getSDPager() {
 		return (SDPager) mPagerList.get(0);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		// 如果使用服务接口在这个类的initdate来调这个方法的时候会空指针，不知道为什么，由于进了歌曲页面再出来进度条就不走了，所以这样写
+		BackgroundService.setHandler(handler);
+		if (BackgroundService.currMp3Path != null) {
+			tv_musicname.setText(mi.setPlayName(BackgroundService.currMp3Path));
+		}
 	}
 
 	/**

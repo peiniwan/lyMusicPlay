@@ -7,5 +7,7 @@
     <color name="tvcolor">#000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
+    <color name="main_item_bg">#3f000000</color>
+     <color name="pressed_bg">#8033B5E5</color>
 
 </resources>

@@ -29,25 +29,28 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- 底部控制栏 -->
+
     <LinearLayout
         android:id="@+id/ly"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="70dp"
         android:background="@color/minimusic" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/album_pic"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
             android:src="@drawable/left2" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="70dp" >
 
             <LinearLayout
+                android:id="@+id/ly_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
@@ -77,7 +80,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ly_top"
+                android:layout_marginTop="5dp" >
 
                 <ImageView
                     android:id="@+id/pre"
@@ -113,18 +118,16 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:clickable="true"
-                    android:padding="dp"
                     android:src="@drawable/music_item_btn_favourite_pressed" />
             </LinearLayout>
 
             <SeekBar
                 android:id="@+id/sb"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="15dp"
+                android:layout_height="4dp"
+                android:layout_alignParentBottom="true"
                 android:thumb="@null" />
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

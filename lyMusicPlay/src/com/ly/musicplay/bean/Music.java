@@ -65,19 +65,6 @@ public class Music {
 		this.name = name;
 	}
 
-	public Music(long id, String title, String arrtist, String album,
-			long size, long duration, String url, String name) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.arrtist = arrtist;
-		this.album = album;
-		this.size = size;
-		this.duration = duration;
-		this.url = url;
-		this.name = name;
-	}
-
 	public Music() {
 		super();
 	}
@@ -85,7 +72,7 @@ public class Music {
 	private long id;
 
 	public Music(long id, String title, String arrtist, String album,
-			String albumId, long size, long duration, String url, String name) {
+			long albumId, long size, long duration, String url, String name) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -101,18 +88,20 @@ public class Music {
 	private String title;
 	private String arrtist;
 	private String album;
-	private String albumId;
+	public long getAlbumId() {
+		return albumId;
+	}
+
+	public void setAlbumId(long albumId) {
+		this.albumId = albumId;
+	}
+
+	private long albumId;
 	private long size;
 	private long duration;
 	private String url;
 	private String name;
 
-	public String getAlbumId() {
-		return albumId;
-	}
 
-	public void setAlbumId(String albumId) {
-		this.albumId = albumId;
-	}
 
 }
