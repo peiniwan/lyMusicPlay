@@ -70,6 +70,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 	};
 	public static TextView tv_musicname; // 显示正在播放的歌曲名称，在服务里设置
 	public static ImageView content_iv;
+	public static TextView tv_musicartist;
 
 	/**
 	 * 初始化布局
@@ -83,6 +84,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		rgGroup = (RadioGroup) v.findViewById(R.id.rg_group);
 		ly = (LinearLayout) v.findViewById(R.id.ly);
 		tv_musicname = (TextView) v.findViewById(R.id.tv_musicname);
+		tv_musicartist = (TextView) v.findViewById(R.id.tv_musicartist);
 		tv_progress = (TextView) v.findViewById(R.id.tv_progress);
 		seekbar = (SeekBar) v.findViewById(R.id.sb);
 
@@ -94,7 +96,6 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		pre.setOnClickListener(this); // 设置上一首歌的监听器
 		play.setOnClickListener(this); // 设置播放按钮的监听器
 		next.setOnClickListener(this); // 设置下一首歌按钮的监听器
-
 		ly.setOnClickListener(this);
 		return v;
 	}
@@ -113,7 +114,6 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 
 		rgGroup.check(R.id.rb_sd);// 让RedioButton默认勾选第一页
 		mPagerList = new ArrayList<BasePager>();// 存放viewpager
-		SeekBarChange();// 拖拽进度条时歌也变化
 
 		// 将viewpager加入list
 		mPagerList.add(new SDPager(mActivity));
@@ -244,44 +244,14 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 
 		case R.id.next:
 			mi.next();
+			break;
 
-			break;
-		case R.id.play_mode_all:
-			// mi.stop();
-			break;
 		case R.id.ly:
 			Intent in = new Intent(mActivity, DetilsMusicActivity.class);
-			// in.putExtra(name, value);
 			startActivity(in);
 			break;
 		}
 
-	}
-
-	/**
-	 * 控制条变化歌曲进度跟着变
-	 */
-	private void SeekBarChange() {
-		seekbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				int progress = seekBar.getProgress();
-				// 改变播放进度
-				mi.seekTo(progress);
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-
-			}
-
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-
-			}
-		});
 	}
 
 	// 设置当前播放的信息
@@ -317,7 +287,12 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		// 如果使用服务接口在这个类的initdate来调这个方法的时候会空指针，不知道为什么，由于进了歌曲页面再出来进度条就不走了，所以这样写
 		BackgroundService.setHandler(handler);
 		if (BackgroundService.currMp3Path != null) {
-			tv_musicname.setText(mi.setPlayName(BackgroundService.currMp3Path));
+			String name = mi.setPlayName(BackgroundService.currMp3Path);
+			System.out.println("name-----------" + name);
+			String[] split = name.split("-");
+			tv_musicname.setText(split[1]);// 设置当前播放的歌曲名字
+			tv_musicartist.setText(split[0]);
+
 		}
 	}
 

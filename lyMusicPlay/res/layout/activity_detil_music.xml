@@ -41,6 +41,7 @@
         android:layout_height="250dp"
         android:layout_below="@id/title"
         android:layout_centerHorizontal="true"
+        android:clickable="true"
         android:layout_marginTop="90dp"
         android:background="@drawable/player_cover_bg"
         android:padding="3.0dip"
@@ -117,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/transparent"
-                android:src="@drawable/player_btn_play_style" />
+                android:src="@drawable/player_btn_pause_style" />
 
             <ImageButton
                 android:id="@+id/detil_next"

@@ -12,6 +12,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.ly.musicplay.R;
 import com.ly.musicplay.fragment.ContentFragment;
 import com.ly.musicplay.fragment.RightMenuFragment;
+import com.ly.musicplay.utils.ActivityCollector;
 
 /**
  * 主界面
@@ -19,11 +20,13 @@ import com.ly.musicplay.fragment.RightMenuFragment;
  * @author Administrator
  * 
  */
-public class MainActivity extends SlidingFragmentActivity {
+public class MainActivity extends BaseActivity {
 
 	private SlidingMenu slidingMenu;
 	private Fragment mContent;
 	private FragmentTransaction transaction;
+	public static final String PREFERENCES_NAME = "settings";// SharedPreferences名称
+	public static final String PREFERENCES_MODE = "mode";// 存储播放模式
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,7 @@ public class MainActivity extends SlidingFragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题
 		setContentView(R.layout.activity_main);
 		initSlidingMenu(savedInstanceState);
+
 	}
 
 	/**
@@ -89,6 +93,12 @@ public class MainActivity extends SlidingFragmentActivity {
 				.commit();// 加上这个addToBackStack(null)，ondestory不会调用
 		getSlidingMenu().showContent();
 
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		ActivityCollector.finishAll();
 	}
 
 	/**

@@ -10,6 +10,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.ly.musicplay.bean.Music;
 import com.ly.musicplay.fragment.ContentFragment;
 import com.ly.musicplay.receive.ServiceReceiver;
 import com.ly.musicplay.service.BackgroundService;
+import com.ly.musicplay.utils.MediaUtil;
 import com.ly.musicplay.utils.MusicListUtils;
 
 /**
@@ -47,6 +49,7 @@ public class SDPager extends BasePager {
 	public static ServiceReceiver receiver;// 通知栏广播
 	private static NotificationManager manager;
 	public static TextView title_music_name;// 通知歌曲名字
+	public static RemoteViews remoteViews;
 
 	public SDPager(Activity activity) {
 		super(activity);
@@ -56,7 +59,7 @@ public class SDPager extends BasePager {
 	public void initData() {
 
 		lv_sd = new ListView(mActivity);
-		lv_sd.setBackgroundResource(R.drawable.bg);// 设置播放暂停的图片
+		lv_sd.setBackgroundResource(R.drawable.bg);
 
 		receiver = new ServiceReceiver();// 通知的广播
 		IntentFilter intentFilter = new IntentFilter();
@@ -105,22 +108,27 @@ public class SDPager extends BasePager {
 	 */
 	public static void showCustomView() {
 		Log.d("showCustomView", "执行了");
-		RemoteViews remoteViews = new RemoteViews(mActivity.getPackageName(),
-				R.layout.notyfiction);// 通知栏上只能用这个view
+		remoteViews = new RemoteViews(mActivity.getPackageName(),
+				R.layout.notyfiction);
 		remoteViews.setTextViewText(R.id.title_music_name,
 				BackgroundService.songName); // 设置textview
-
-		if (BackgroundService.mediaPlayer.isPlaying()) {// 这步代码执行不了，因为它一直是false?
-			Log.d("showCustomView1", BackgroundService.mediaPlayer.isPlaying()
-					+ "");
-			remoteViews.setImageViewResource(R.id.paly_pause_music,
-					R.drawable.music_play);
-		} else {
-			Log.d("showCustomView2", BackgroundService.mediaPlayer.isPlaying()
-					+ "");
-			remoteViews.setImageViewResource(R.id.paly_pause_music,
-					R.drawable.music_pause);
+		if (BackgroundService.currMp3Path != null) {
+			Bitmap bitmap = MediaUtil.getSamllBitmap(
+					BackgroundService.currMp3Path, mActivity);
+			remoteViews.setImageViewBitmap(R.id.songer_pic, bitmap);
 		}
+		// if (BackgroundService.mediaPlayer.isPlaying()) {//
+		// 这些代码执行不了，不知道为什么？写在服务里也不行
+		// Log.d("showCustomView1", BackgroundService.mediaPlayer.isPlaying()
+		// + "");
+		// remoteViews.setImageViewResource(R.id.paly_pause_music,
+		// R.drawable.music_play);
+		// } else {
+		// Log.d("showCustomView2", BackgroundService.mediaPlayer.isPlaying()
+		// + "");
+		// remoteViews.setImageViewResource(R.id.paly_pause_music,
+		// R.drawable.music_pause);
+		// }
 
 		// 设置按钮事件 -- 发送广播 --广播接收后进行对应的处理
 		Intent buttonPlayIntent = new Intent(
@@ -229,5 +237,9 @@ public class SDPager extends BasePager {
 
 	class ViewHolder {
 		TextView tv_item;
+	}
+
+	public void getCurrMp3() {
+		// lv_sd.get
 	}
 }

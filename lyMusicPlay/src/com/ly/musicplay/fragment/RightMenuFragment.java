@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.ly.musicplay.R;
 import com.ly.musicplay.activity.MainActivity;
+import com.ly.musicplay.utils.ActivityCollector;
 
 /**
  * 侧边栏
@@ -105,7 +106,8 @@ public class RightMenuFragment extends BaseFragment {
 			// ContentFragment fragment = mainui.getContentFragment();
 			// Log.d("RightMenuFragment", "CONfragment" + fragment);
 			// fragment.stop();
-			mainui.finishAll();
+			// mainui.finishAll();
+			ActivityCollector.finishAll();
 		}
 	}
 
