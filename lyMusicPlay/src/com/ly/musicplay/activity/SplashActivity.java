@@ -33,7 +33,7 @@ public class SplashActivity extends Activity {
 			}
 
 		};
-		handler.postDelayed(runnable, 2000);// 调用进程延迟2秒
+		handler.postDelayed(runnable, 1500);// 调用进程延迟2秒
 	}
 
 }

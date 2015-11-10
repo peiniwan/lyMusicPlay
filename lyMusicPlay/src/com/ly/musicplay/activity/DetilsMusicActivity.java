@@ -27,7 +27,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.ly.musicplay.R;
-import com.ly.musicplay.fragment.ContentFragment;
 import com.ly.musicplay.receive.ServiceReceiver;
 import com.ly.musicplay.service.BackgroundService;
 import com.ly.musicplay.service.MusicInterface;
@@ -101,7 +100,14 @@ public class DetilsMusicActivity extends BaseActivity implements
 			detil_pic.setImageBitmap(bitmap);
 		}
 		BackgroundService.setHandler(handler);
-		// SeekBarChange();
+		if (BackgroundService.mediaPlayer != null) {
+			if (BackgroundService.mediaPlayer.isPlaying()) {
+				detil_play.setImageResource(R.drawable.player_btn_pause_style);
+			} else {
+				detil_play.setImageResource(R.drawable.player_btn_play_style);
+			}
+		}
+		SeekBarChange();
 		returnMain.setOnClickListener(this);
 		detil_pre.setOnClickListener(this);
 		detil_play.setOnClickListener(this);
@@ -126,6 +132,18 @@ public class DetilsMusicActivity extends BaseActivity implements
 		popupVolume.setOutsideTouchable(true);// 设置点击窗口外边窗口消失
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (BackgroundService.mediaPlayer != null) {
+			if (BackgroundService.mediaPlayer.isPlaying()) {
+				detil_play.setImageResource(R.drawable.player_btn_pause_style);
+			} else {
+				detil_play.setImageResource(R.drawable.player_btn_play_style);
+			}
+		}
+	}
+
 	private void initView() {
 		returnMain = (ImageButton) findViewById(R.id.detil_return);
 		detil_name = (TextView) findViewById(R.id.detil_name);
@@ -138,34 +156,33 @@ public class DetilsMusicActivity extends BaseActivity implements
 		detil_next = (ImageButton) findViewById(R.id.detil_next);
 		detil_star = (ImageButton) findViewById(R.id.detil_star);
 		detil_pic = (ImageView) findViewById(R.id.detil_pic);
-
 	}
 
 	/**
 	 * 控制条变化歌曲进度跟着变
 	 */
-	// private void SeekBarChange() {
-	// detil_seek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-	//
-	// @Override
-	// public void onStopTrackingTouch(SeekBar seekBar) {
-	// int progress = seekBar.getProgress();
-	// // 改变播放进度
-	// mi.seekTo(progress);
-	// }
-	//
-	// @Override
-	// public void onStartTrackingTouch(SeekBar seekBar) {
-	//
-	// }
-	//
-	// @Override
-	// public void onProgressChanged(SeekBar seekBar, int progress,
-	// boolean fromUser) {
-	//
-	// }
-	// });
-	// }
+	private void SeekBarChange() {
+		detil_seek.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				int progress = seekBar.getProgress();
+				// 改变播放进度
+				mi.seekTo(progress);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+
+			}
+		});
+	}
 
 	// 设置当前播放的信息
 	private static ArrayList<String> setPlayInfo(int position, int max) {
@@ -200,26 +217,22 @@ public class DetilsMusicActivity extends BaseActivity implements
 			startActivity(intent);
 			break;
 		case R.id.detil_pre:
-			intent.setAction(ServiceReceiver.NOTIFICATION_ITEM_BUTTON_PER);
-			sendBroadcast(intent);
+			mi.per();
 			// detil_name.setText(BackgroundService.songName);
 			// System.out.println("DetilsMusicActivity歌名"
 			// + BackgroundService.songName);//
 			// 这样写BackgroundService.songName在服务里输出的和这里不一样,并且少了.mp3后缀
 			break;
 		case R.id.detil_play:
-			intent.setAction(ServiceReceiver.NOTIFICATION_ITEM_BUTTON_PLAY);
-			sendBroadcast(intent);
+			mi.startPause();
 			if (BackgroundService.mediaPlayer.isPlaying()) {
-				detil_play.setImageResource(R.drawable.player_btn_play_style);
-			} else {
 				detil_play.setImageResource(R.drawable.player_btn_pause_style);
+			} else {
+				detil_play.setImageResource(R.drawable.player_btn_play_style);
 			}
-
 			break;
 		case R.id.detil_next:
-			intent.setAction(ServiceReceiver.NOTIFICATION_ITEM_BUTTON_NEXT);
-			sendBroadcast(intent);
+			mi.next();
 			break;
 		case R.id.detil_mode:
 			int modeChange = mi.modeChange(mode);
@@ -264,16 +277,12 @@ public class DetilsMusicActivity extends BaseActivity implements
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
 		switch (seekBar.getId()) {
-		case R.id.detil_seek:
-			// int progress = seekBar.getProgress();
-			// // 改变播放进度
-			mi.seekTo(progress);
-			break;
 		case R.id.pupup_volume_seek:
 			if (fromUser) {
 				audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
 						progress, 0);
 			}
+			break;
 		}
 	}
 
@@ -283,7 +292,9 @@ public class DetilsMusicActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onStopTrackingTouch(SeekBar seekBar) {
-
+	public void onStopTrackingTouch(SeekBar seekBar) {// 写在这里不知道为什么不行
+		// int pro = seekBar.getProgress();
+		// // 改变播放进度
+		// mi.seekTo(pro);
 	}
 }

@@ -59,7 +59,7 @@ public class SDPager extends BasePager {
 	public void initData() {
 
 		lv_sd = new ListView(mActivity);
-		lv_sd.setBackgroundResource(R.drawable.bg);
+		lv_sd.setBackgroundResource(R.drawable.sdpager);
 
 		receiver = new ServiceReceiver();// 通知的广播
 		IntentFilter intentFilter = new IntentFilter();

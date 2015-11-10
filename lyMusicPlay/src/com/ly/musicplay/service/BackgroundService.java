@@ -324,8 +324,8 @@ public class BackgroundService extends Service {
 				case MODE_REPEAT_ONE:
 					break;
 				case MODE_REPEAT_ALL:
-					if (SDPager.songNum == 0) {
-						SDPager.songNum = (SDPager.musicUrlList.size() - 1);
+					if (SDPager.songNum == SDPager.musicUrlList.size() - 1) {
+						SDPager.songNum = 0;
 					} else {
 						SDPager.songNum = SDPager.songNum + 1;
 					}

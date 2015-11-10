@@ -10,7 +10,7 @@
         android:id="@+id/rg_group"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/title"
+        android:background="@drawable/top2"
         android:orientation="horizontal" >
 
         <RadioButton
@@ -36,7 +36,7 @@
         android:id="@+id/ly"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@color/minimusic" >
+        android:background="@drawable/ctroll" >
 
         <ImageView
             android:id="@+id/album_pic"

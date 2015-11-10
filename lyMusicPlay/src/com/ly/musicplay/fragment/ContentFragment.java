@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.ly.musicplay.R;
@@ -92,7 +91,6 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		play = (ImageView) v.findViewById(R.id.play); // 实例化播放的按钮控件
 		next = (ImageView) v.findViewById(R.id.next); // 实例化下一首歌的按钮控件
 		content_iv = (ImageView) v.findViewById(R.id.album_pic);
-
 		pre.setOnClickListener(this); // 设置上一首歌的监听器
 		play.setOnClickListener(this); // 设置播放按钮的监听器
 		next.setOnClickListener(this); // 设置下一首歌按钮的监听器
