@@ -52,7 +52,7 @@ public class SDPager extends BasePager {
 	 * 通知栏
 	 */
 	public static ServiceReceiver receiver;// 通知栏广播
-	private static NotificationManager manager;// 通知栏管理器
+	public static NotificationManager manager;// 通知栏管理器
 	public static TextView title_music_name;// 通知歌曲名字
 	public static RemoteViews remoteViews;// 通知栏view对象
 

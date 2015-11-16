@@ -314,6 +314,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		seekbar.setProgress(0);
 		seekbar.setMax(0);
 		mActivity.unregisterReceiver(SDPager.receiver);
+		SDPager.manager.cancel(1);
 		mActivity.unbindService(conn);
 		mActivity.stopService(intent);
 	}
