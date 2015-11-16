@@ -148,7 +148,7 @@ public class RightMenuFragment extends BaseFragment {
 			View view = null;
 			ViewHolder viewHolder = null;
 			if (convertView == null) {
-				view = View.inflate(mActivity, R.layout.right_menu_item, null);
+				view = View.inflate(mActivity, R.layout.left_menu_item, null);
 				viewHolder = new ViewHolder();
 				viewHolder.tv = (TextView) view.findViewById(R.id.tv_title);
 				view.setTag(viewHolder);

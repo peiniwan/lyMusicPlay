@@ -3,8 +3,7 @@
     android:id="@+id/con_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-   >
+    android:orientation="vertical" >
 
     <RadioGroup
         android:id="@+id/rg_group"
@@ -21,10 +20,10 @@
         <RadioButton
             android:id="@+id/rb_http"
             style="@style/BottomTabStyle"
-            android:text="网络歌曲" />
+            android:text="歌手分类" />
     </RadioGroup>
 
-    <android.support.v4.view.ViewPager
+    <com.ly.musicplay.view.HorizontalViewPager
         android:id="@+id/vp_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -44,7 +43,7 @@
             android:layout_height="70dp"
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
-            android:src="@drawable/left2" />
+            android:src="@drawable/defaultpic" />
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -6,6 +6,12 @@ import android.util.Log;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.ly.musicplay.utils.ActivityCollector;
 
+/**
+ * activity基类
+ * 
+ * @author Administrator
+ * 
+ */
 public class BaseActivity extends SlidingFragmentActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

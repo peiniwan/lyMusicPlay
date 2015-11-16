@@ -7,6 +7,12 @@ import android.util.Log;
 
 import com.ly.musicplay.fragment.ContentFragment;
 
+/**
+ * 用于通知栏操作歌曲
+ * 
+ * @author Administrator
+ * 
+ */
 public class ServiceReceiver extends BroadcastReceiver {
 	public static final String NOTIFICATION_ITEM_BUTTON_PER = "com.example.notification.ServiceReceiver.per";// ----通知栏上一首按钮
 	public static final String NOTIFICATION_ITEM_BUTTON_PLAY = "com.example.notification.ServiceReceiver.play";// ----通知栏播放按钮
@@ -16,7 +22,7 @@ public class ServiceReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Log.d("ServiceReceiver", "执行了");
 		String action = intent.getAction();
-		if (action.equals(NOTIFICATION_ITEM_BUTTON_PER)) {// ----通知栏播放按钮响应事件
+		if (action.equals(NOTIFICATION_ITEM_BUTTON_PER)) {// ----通知栏播放按钮响应事件,但是会跳好几首歌，原因还没找到
 			ContentFragment.mi.per();
 		} else if (action.equals(NOTIFICATION_ITEM_BUTTON_PLAY)) {// ----通知栏播放按钮响应事件
 			ContentFragment.mi.startPause();

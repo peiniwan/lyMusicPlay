@@ -1,5 +1,11 @@
 package com.ly.musicplay.bean;
 
+/**
+ * 歌曲的bean对象
+ * 
+ * @author Administrator
+ * 
+ */
 public class Music {
 	public long getId() {
 		return id;
@@ -88,6 +94,7 @@ public class Music {
 	private String title;
 	private String arrtist;
 	private String album;
+
 	public long getAlbumId() {
 		return albumId;
 	}
@@ -101,7 +108,5 @@ public class Music {
 	private long duration;
 	private String url;
 	private String name;
-
-
 
 }

@@ -1,7 +1,6 @@
 package com.ly.musicplay.service;
 
 import java.io.File;
-import java.util.List;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -9,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -25,11 +23,9 @@ import android.widget.Toast;
 import com.ly.musicplay.R;
 import com.ly.musicplay.activity.DetilsMusicActivity;
 import com.ly.musicplay.activity.MainActivity;
-import com.ly.musicplay.bean.Music;
 import com.ly.musicplay.fragment.ContentFragment;
 import com.ly.musicplay.pager.SDPager;
 import com.ly.musicplay.utils.MediaUtil;
-import com.ly.musicplay.utils.MusicListUtils;
 
 /**
  * 后台播放服务
@@ -41,15 +37,14 @@ public class BackgroundService extends Service {
 	public static String songName; // 当前播放的歌曲名
 	private PhoneReceiver phoneReceiver;
 	private static Handler mHandler;
-	public static String currMp3Path;
+	public static String currMp3Path;// 当前播放歌曲路径
 
 	private final int MODE_NORMAL = 0;// 顺序播放，放到最后一首停止
 	private final int MODE_REPEAT_ONE = 1;// 单曲循环
 	private final int MODE_REPEAT_ALL = 2;// 全部循环
 	private final int MODE_RANDOM = 3;// 随即播放
-	// private int mode = MODE_NORMAL;// 播放模式(默认顺序播放)
 	SharedPreferences sharedPreferences;
-	int mode;
+	int mode;// 播放 模式
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -57,20 +52,16 @@ public class BackgroundService extends Service {
 	}
 
 	@Override
-	public boolean stopService(Intent name) {
-		Log.d("BackgroundService", "stopService执行了");
-		return super.stopService(name);
-	}
-
-	@Override
 	public void onCreate() {
 		super.onCreate();
 		sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_NAME,
 				Context.MODE_PRIVATE);
-		mode = sharedPreferences.getInt(MainActivity.PREFERENCES_MODE, 0);
+		mode = sharedPreferences.getInt(MainActivity.PREFERENCES_MODE, 0);// 播放模式默认是顺序播放
 		if (mediaPlayer == null) {
 			mediaPlayer = new MediaPlayer();
 		}
+
+		// 电话来去电广播
 		phoneReceiver = new PhoneReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);// 设置拨号动作
@@ -81,7 +72,6 @@ public class BackgroundService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(phoneReceiver);// 取消监听
-		Log.d("BackgroundService", "onDestroy执行了");
 	}
 
 	/**
@@ -94,12 +84,12 @@ public class BackgroundService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
-				mBinder.startPause();// 不管是传过来的mi,还是mBinder都不行
+				mBinder.startPause();// 不管是传过来的mi,还是mBinder都不行，挂了不继续唱
 				// mediaPlayer.pause();
 			} else {
 				// 如果是来电
 				TelephonyManager tManager = (TelephonyManager) context
-						.getSystemService(Service.TELEPHONY_SERVICE);
+						.getSystemService(Service.TELEPHONY_SERVICE);// 电话系统服务
 				if (tManager.getCallState() == TelephonyManager.CALL_STATE_RINGING
 						&& mediaPlayer != null && mediaPlayer.isPlaying()) {
 					mediaPlayer.pause();
@@ -109,21 +99,29 @@ public class BackgroundService extends Service {
 
 	}
 
+	/**
+	 * 音乐操作管理
+	 * 
+	 * @author Administrator
+	 * 
+	 */
 	class MusicController extends Binder implements MusicInterface {
 
 		public void play(String mp3Path) {
 			currMp3Path = mp3Path;
-			Log.d("play", "执行了");
 			if (mediaPlayer != null) {
 				mediaPlayer.reset(); // 重置多媒体
 				try {
 					mediaPlayer.setDataSource(mp3Path);// 为多媒体对象设置播放路径
 					mediaPlayer.prepare();
 					SDPager.mAdapter.notifyDataSetChanged();
-					String PlayName = setPlayName(mp3Path);
+
+					String PlayName = setPlayName(mp3Path);// 把路径截取成歌名
 					String[] split = PlayName.split("-");
 					ContentFragment.tv_musicname.setText(split[1]);// 设置当前播放的歌曲名字
-					ContentFragment.tv_musicartist.setText(split[0]);
+					ContentFragment.tv_musicartist.setText(split[0]);// 设置当前播放的歌手名字
+
+					// 设置play界面的专辑图片和歌曲名字
 					if (DetilsMusicActivity.detil_name != null
 							&& DetilsMusicActivity.detil_pic != null) {
 						DetilsMusicActivity.detil_name
@@ -132,11 +130,13 @@ public class BackgroundService extends Service {
 								.getLargeBitmap(mp3Path,
 										getApplicationContext()));
 					}
+
 					ContentFragment.content_iv.setImageBitmap(MediaUtil
-							.getSamllBitmap(mp3Path, getApplicationContext()));
+							.getSamllBitmap(mp3Path, getApplicationContext())); // 设置首页的歌曲专辑
 					ContentFragment.play
 							.setImageResource(R.drawable.main_btn_play);// 设置播放暂停的图片
-					SDPager.showCustomView();
+					SDPager.showCustomView();// 再次刷新通知界面
+
 					mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
 						// 准备完成调用此方法
 						@Override
@@ -205,7 +205,7 @@ public class BackgroundService extends Service {
 		}
 
 		public int modeChange(int mode) {
-			mode = sharedPreferences.getInt(MainActivity.PREFERENCES_MODE, 0);
+			mode = sharedPreferences.getInt(MainActivity.PREFERENCES_MODE, 0);// 调用的时候判断当前的模式
 			if (mode < MODE_RANDOM) {
 				mode++;
 			} else {
@@ -241,9 +241,9 @@ public class BackgroundService extends Service {
 				if (mediaPlayer.isPlaying()) {
 					mediaPlayer.pause();
 					ContentFragment.play
-							.setImageResource(R.drawable.main_btn_pause);
+							.setImageResource(R.drawable.main_btn_pause);// 这个起作用
 					SDPager.remoteViews.setImageViewResource(
-							R.id.paly_pause_music, R.drawable.music_pause);
+							R.id.paly_pause_music, R.drawable.music_pause);// 这个不起作用
 				} else {
 					mediaPlayer.start();
 					ContentFragment.play
@@ -268,10 +268,20 @@ public class BackgroundService extends Service {
 		}
 	}
 
+	/**
+	 * 设置handler，给进度条发送消息用
+	 * 
+	 * @param handler
+	 */
 	public static void setHandler(Handler handler) {
 		mHandler = handler;
 	}
 
+	/**
+	 * 上一首，根据模式返回对应的歌曲路径
+	 * 
+	 * @return
+	 */
 	public String perSong() {
 		if (mediaPlayer != null) {
 			if (SDPager.musicUrlList != null) {
@@ -299,8 +309,6 @@ public class BackgroundService extends Service {
 					break;
 				}
 				songName = SDPager.musicUrlList.get(SDPager.songNum);
-				System.out.println("perSong" + mode);
-
 			}
 		}
 		return songName;

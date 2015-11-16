@@ -3,7 +3,6 @@ package com.ly.musicplay.fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +15,18 @@ import android.view.ViewGroup;
 public abstract class BaseFragment extends Fragment {
 
 	public static Activity mActivity;
-	
+
 	// fragment创建，activity此时还没有创建完成
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActivity = getActivity();
-		Log.d("BaseFragment", "onCreate执行了");
 	}
 
 	// 处理fragment的布局
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.d("BaseFragment", "onCreateView执行了");
 		return initViews();
 	}
 
@@ -37,7 +34,6 @@ public abstract class BaseFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.d("BaseFragment", "onCreateView执行了");
 		initData();
 	}
 
@@ -48,6 +44,5 @@ public abstract class BaseFragment extends Fragment {
 	public void initData() {
 
 	}
-
 
 }

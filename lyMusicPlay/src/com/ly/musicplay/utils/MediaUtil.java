@@ -18,6 +18,12 @@ import android.os.ParcelFileDescriptor;
 import com.ly.musicplay.R;
 import com.ly.musicplay.bean.Music;
 
+/**
+ * 获取专辑图片工具类
+ * 
+ * @author Administrator
+ * 
+ */
 public class MediaUtil {
 	// 获取专辑封面的Uri
 	private static final Uri albumArtUri = Uri
@@ -34,7 +40,7 @@ public class MediaUtil {
 		opts.inPreferredConfig = Bitmap.Config.RGB_565;
 		if (small) { // 返回小图片
 			return BitmapFactory.decodeStream(context.getResources()
-					.openRawResource(R.drawable.left2), null, opts);
+					.openRawResource(R.drawable.defaultpic), null, opts);
 		}
 		return BitmapFactory.decodeStream(context.getResources()
 				.openRawResource(R.drawable.player_cover_default), null, opts);
@@ -199,6 +205,13 @@ public class MediaUtil {
 		return candidate;
 	}
 
+	/**
+	 * 获取小Bitmap对象
+	 * 
+	 * @param mp3Path
+	 * @param context
+	 * @return
+	 */
 	public static Bitmap getSamllBitmap(String mp3Path, Context context) {
 		List<Music> musicList = MusicListUtils.getMusicList(context);
 		for (Music music : musicList) {
@@ -208,29 +221,26 @@ public class MediaUtil {
 				System.out.println("albumId" + albumId);
 				System.out.println("Id" + id);
 				Bitmap bitmap = getArtwork(context, id, albumId, true, true);
-				System.out.println("getSamllBitmap---bitmap--------"
-						+ bitmap.getHeight());
-				// Bitmap bitmap = MediaUtil.getArtwork(getApplicationContext(),
-				// albumId, true);
 				return bitmap;
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * 获取大Bitmap对象
+	 * 
+	 * @param mp3Path
+	 * @param context
+	 * @return
+	 */
 	public static Bitmap getLargeBitmap(String mp3Path, Context context) {
 		List<Music> musicList = MusicListUtils.getMusicList(context);
 		for (Music music : musicList) {
 			if (mp3Path.equals(music.getUrl())) {
 				long albumId = music.getAlbumId();
 				long id = music.getId();
-				System.out.println("albumId" + albumId);
-				System.out.println("Id" + id);
 				Bitmap bitmap = getArtwork(context, id, albumId, true, false);
-				System.out.println("getLargeBitmap---bitmap--------"
-						+ bitmap.getHeight());
-				// Bitmap bitmap = MediaUtil.getArtwork(getApplicationContext(),
-				// albumId, true);
 				return bitmap;
 			}
 		}

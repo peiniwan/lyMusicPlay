@@ -21,6 +21,12 @@ import com.ly.musicplay.R;
 import com.ly.musicplay.utils.MyOrientationListener;
 import com.ly.musicplay.utils.MyOrientationListener.OnOrientationListener;
 
+/**
+ * 地图中心
+ * 
+ * @author Administrator
+ * 
+ */
 public class MapFargment extends BaseFragment {
 
 	private MapView mMapView;
@@ -62,7 +68,6 @@ public class MapFargment extends BaseFragment {
 	 * 方向传感器X方向的值
 	 */
 	private int mXDirection;
-
 
 	@Override
 	public View initViews() {

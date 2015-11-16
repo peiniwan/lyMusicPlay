@@ -6,6 +6,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+/**
+ * 地图中心位置传感器
+ * 
+ * @author Administrator
+ * 
+ */
 public class MyOrientationListener implements SensorEventListener {
 
 	private Context context;

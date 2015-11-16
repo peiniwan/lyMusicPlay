@@ -27,28 +27,35 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.ly.musicplay.R;
-import com.ly.musicplay.receive.ServiceReceiver;
 import com.ly.musicplay.service.BackgroundService;
 import com.ly.musicplay.service.MusicInterface;
 import com.ly.musicplay.utils.MediaUtil;
 
+/**
+ * 播放详情界面
+ * 
+ * @author Administrator
+ * 
+ */
 public class DetilsMusicActivity extends BaseActivity implements
 		OnClickListener, OnSeekBarChangeListener {
-	private ImageButton returnMain;
-	public static TextView detil_name;
-	private TextView detil_current;
-	private TextView detil_total;
-	private SeekBar detil_seek;
-	private ImageButton detil_mode;
-	private ImageButton detil_pre;
-	private ImageButton detil_play;
-	private ImageButton detil_next;
-	private ImageButton detil_star;
-	public static ImageView detil_pic;
+
+	private ImageButton returnMain;// 回到上个界面
+	public static TextView detil_name;// 歌曲名
+	private TextView detil_current;// 当前进度
+	private TextView detil_total;// 总共进度
+	private SeekBar detil_seek;// 进度条
+	private ImageButton detil_mode;// 播放模式
+	private ImageButton detil_pre;// 上一首
+	private ImageButton detil_play;// 暂停播放
+	private ImageButton detil_next;// 下一首
+	private ImageButton detil_star;// 红心
+	public static ImageView detil_pic;// 专辑图片
 
 	public MusicInterface mi;// 访问服务的方法
 	public MyServiceConn conn;// 绑定服务时要实现的
 
+	// 播放模式的各种状态选择器
 	private final int[] modeImage = { R.drawable.player_btn_mode_normal_style,
 			R.drawable.player_btn_mode_repeat_one_style,
 			R.drawable.player_btn_mode_repeat_all_style,
@@ -71,6 +78,7 @@ public class DetilsMusicActivity extends BaseActivity implements
 	private SharedPreferences preferences;
 	private int mode;
 
+	// 音量相关
 	private SeekBar seekVolumeBar;// 音量进度条
 	private PopupWindow popupVolume;
 	private AudioManager audioManager;
@@ -80,18 +88,21 @@ public class DetilsMusicActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_detil_music);
-		setBehindContentView(R.layout.right_menu);// 设置侧边栏布局
+		setBehindContentView(R.layout.left_menu);// 设置侧边栏布局
+
 		Intent intent = new Intent(this, BackgroundService.class);
 		MyServiceConn conn = new MyServiceConn();
 		startService(intent);// 开启后台播放服务
 		bindService(intent, conn, Context.BIND_AUTO_CREATE);
+
 		initView();
 		initPopupVolume();// 初始化音量窗口
 		preferences = getSharedPreferences(MainActivity.PREFERENCES_NAME,
 				Context.MODE_PRIVATE);
 		mode = preferences.getInt(MainActivity.PREFERENCES_MODE, 0);
-		detil_mode.setImageResource(modeImage[mode]);
+		detil_mode.setImageResource(modeImage[mode]);// 一进来设置模式
 
+		// 设置歌曲名和专辑图片
 		if (BackgroundService.songName != null
 				&& BackgroundService.currMp3Path != null) {
 			detil_name.setText(BackgroundService.songName);
@@ -99,7 +110,9 @@ public class DetilsMusicActivity extends BaseActivity implements
 					BackgroundService.currMp3Path, this);
 			detil_pic.setImageBitmap(bitmap);
 		}
+		// 给服务设置handler
 		BackgroundService.setHandler(handler);
+		// 设置暂停播放的图片
 		if (BackgroundService.mediaPlayer != null) {
 			if (BackgroundService.mediaPlayer.isPlaying()) {
 				detil_play.setImageResource(R.drawable.player_btn_pause_style);
@@ -107,7 +120,9 @@ public class DetilsMusicActivity extends BaseActivity implements
 				detil_play.setImageResource(R.drawable.player_btn_play_style);
 			}
 		}
+
 		SeekBarChange();
+
 		returnMain.setOnClickListener(this);
 		detil_pre.setOnClickListener(this);
 		detil_play.setOnClickListener(this);
@@ -132,6 +147,9 @@ public class DetilsMusicActivity extends BaseActivity implements
 		popupVolume.setOutsideTouchable(true);// 设置点击窗口外边窗口消失
 	}
 
+	/**
+	 * 再次进来设置对应的play按钮的图片
+	 */
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -144,6 +162,9 @@ public class DetilsMusicActivity extends BaseActivity implements
 		}
 	}
 
+	/**
+	 * 初始化控件
+	 */
 	private void initView() {
 		returnMain = (ImageButton) findViewById(R.id.detil_return);
 		detil_name = (TextView) findViewById(R.id.detil_name);
@@ -208,6 +229,9 @@ public class DetilsMusicActivity extends BaseActivity implements
 		return arrayList;
 	}
 
+	/**
+	 * 点击侦听
+	 */
 	@Override
 	public void onClick(View v) {
 		Intent intent = new Intent();
@@ -218,10 +242,6 @@ public class DetilsMusicActivity extends BaseActivity implements
 			break;
 		case R.id.detil_pre:
 			mi.per();
-			// detil_name.setText(BackgroundService.songName);
-			// System.out.println("DetilsMusicActivity歌名"
-			// + BackgroundService.songName);//
-			// 这样写BackgroundService.songName在服务里输出的和这里不一样,并且少了.mp3后缀
 			break;
 		case R.id.detil_play:
 			mi.startPause();
@@ -235,10 +255,10 @@ public class DetilsMusicActivity extends BaseActivity implements
 			mi.next();
 			break;
 		case R.id.detil_mode:
-			int modeChange = mi.modeChange(mode);
+			int modeChange = mi.modeChange(mode);// 调用服务接口的改变模式方法，并返回一个模式
 			detil_mode.setImageResource(modeImage[modeChange]);
 			preferences.edit()
-					.putInt(MainActivity.PREFERENCES_MODE, modeChange).commit();
+					.putInt(MainActivity.PREFERENCES_MODE, modeChange).commit();// 把模式保存起来
 			break;
 		case R.id.detil_pic:
 			seekVolumeBar.setProgress(audioManager

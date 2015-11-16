@@ -10,6 +10,12 @@ import android.provider.MediaStore;
 
 import com.ly.musicplay.bean.Music;
 
+/**
+ * 获取系统媒体库保存的歌曲信息
+ * 
+ * @author Administrator
+ * 
+ */
 public class MusicListUtils {
 	public static List<Music> getMusicList(Context context) {
 
@@ -56,7 +62,6 @@ public class MusicListUtils {
 					// 此处添加music，音乐信息，到列表
 					Music music = new Music(id, title, arrtist, album, albumId,
 							size, duration, url, name);
-					// System.out.println(music.toString());
 					musiclist.add(music);
 				}
 			} while (cursor.moveToNext());
@@ -65,7 +70,7 @@ public class MusicListUtils {
 			// 结果集移动到最后一列，再下移为空；释放资源
 			cursor.close();
 		}
-		// f返回音乐文件列表
+		// 返回音乐文件列表
 
 		return musiclist;
 	}

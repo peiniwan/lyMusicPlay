@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
@@ -25,11 +24,12 @@ import android.widget.TextView;
 
 import com.ly.musicplay.R;
 import com.ly.musicplay.activity.DetilsMusicActivity;
+import com.ly.musicplay.pager.ArrtistPager;
 import com.ly.musicplay.pager.BasePager;
-import com.ly.musicplay.pager.HttpPager;
 import com.ly.musicplay.pager.SDPager;
 import com.ly.musicplay.service.BackgroundService;
 import com.ly.musicplay.service.MusicInterface;
+import com.ly.musicplay.view.HorizontalViewPager;
 
 /**
  * 音乐中心
@@ -38,20 +38,25 @@ import com.ly.musicplay.service.MusicInterface;
  * 
  */
 public class ContentFragment extends BaseFragment implements OnClickListener {
-	private RadioGroup rgGroup;
-	private ViewPager mViewPager;
-	private static Intent intent;
 
+	/**
+	 * 控件
+	 */
+	private RadioGroup rgGroup;
+	private HorizontalViewPager mViewPager;
 	public static LinearLayout ly;// 控制音乐的布局，在某些页面隐藏
-	private ArrayList<BasePager> mPagerList;// 存放网络歌曲和本地歌曲页面
 	public ImageView pre; // 定义上一首歌按钮控件
 	public static ImageView play; // 定义播放按钮控件
 	public ImageView stop; // 定义停止按钮控件
 	public ImageView next; // 定义下一首歌按钮控件
 	public static SeekBar seekbar; // 定义进度条控件
-
 	public static TextView tv_progress;// 显示播放时长和正在播放的进度
+	public static TextView tv_musicname; // 显示正在播放的歌曲名称，在服务里设置
+	public static ImageView content_iv;// 专辑图片
+	public static TextView tv_musicartist;// 歌手
 
+	private ArrayList<BasePager> mPagerList;// 存放网络歌曲和本地歌曲页面
+	private static Intent intent;
 	public static MusicInterface mi;// 访问服务的方法
 	public static MyServiceConn conn;// 绑定服务时要实现的
 
@@ -67,19 +72,14 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 					duration / 1000));
 		};
 	};
-	public static TextView tv_musicname; // 显示正在播放的歌曲名称，在服务里设置
-	public static ImageView content_iv;
-	public static TextView tv_musicartist;
 
 	/**
 	 * 初始化布局
 	 */
 	@Override
 	public View initViews() {
-		Log.d("ContentFragment", "onDestroy执行了");
 		View v = View.inflate(mActivity, R.layout.fragment_content, null);// 填充fragment
-
-		mViewPager = (ViewPager) v.findViewById(R.id.vp_content);
+		mViewPager = (HorizontalViewPager) v.findViewById(R.id.vp_content);
 		rgGroup = (RadioGroup) v.findViewById(R.id.rg_group);
 		ly = (LinearLayout) v.findViewById(R.id.ly);
 		tv_musicname = (TextView) v.findViewById(R.id.tv_musicname);
@@ -115,7 +115,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 
 		// 将viewpager加入list
 		mPagerList.add(new SDPager(mActivity));
-		mPagerList.add(new HttpPager(mActivity));
+		mPagerList.add(new ArrtistPager(mActivity));
 
 		mViewPager.setAdapter(new ContentAdapter());// 设置viewpager适配器
 
@@ -215,7 +215,6 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			mi = (MusicInterface) service;
-			Log.d("onServiceConnected", "执行了");
 
 		}
 
@@ -279,6 +278,9 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		return (SDPager) mPagerList.get(0);
 	}
 
+	/**
+	 * 设置再次进来显示的歌名
+	 */
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -304,13 +306,15 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		Log.d("ContentFragment", "onDestroy执行了");
 	}
 
+	/**
+	 * 退出程序的操作
+	 */
 	public static void stop() {
 		mi.stop();
 		seekbar.setProgress(0);
 		seekbar.setMax(0);
 		mActivity.unregisterReceiver(SDPager.receiver);
-		mActivity.unbindService(conn);// 想点击退出时调用此方法，可是这行会报空指针，
-		// 如果把这行和下一行去掉的话，点退出可以停止音乐了，可是再进软件点歌没反应.解决了.不用new，直接调用
+		mActivity.unbindService(conn);
 		mActivity.stopService(intent);
 	}
 }
