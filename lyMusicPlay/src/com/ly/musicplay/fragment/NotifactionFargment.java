@@ -130,4 +130,10 @@ public class NotifactionFargment extends BaseFragment implements
 		}
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// NoReadPager.mHandler.removeCallbacksAndMessages(null);// 取消轮播的handler
+	}
+
 }

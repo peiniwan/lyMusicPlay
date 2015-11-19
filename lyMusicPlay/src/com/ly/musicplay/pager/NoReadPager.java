@@ -2,22 +2,24 @@ package com.ly.musicplay.pager;
 
 import java.util.ArrayList;
 
-import com.ly.musicplay.R;
 import android.app.Activity;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ly.musicplay.R;
 import com.ly.musicplay.utils.RotateUtils;
-import com.ly.musicplay.utils.UiUtils;
+import com.ly.musicplay.view.MyToggleButton;
+import com.ly.musicplay.view.NoInterceptViewPager;
 
 public class NoReadPager extends BasePager implements OnClickListener {
 	private ImageView icon_menu;
@@ -39,19 +41,21 @@ public class NoReadPager extends BasePager implements OnClickListener {
 	 */
 	private boolean isLevel1show = true;
 
-	private ViewPager vp;
-	private LinearLayout ll;
-	private View view_red_point;
-	private int mPointWidth;// 圆点间的距离
-	// 图片资源ID
-	private final int[] imageIds = { R.drawable.a, R.drawable.b, R.drawable.c,
-			R.drawable.d, R.drawable.e };
-
-	// 图片标题集合
-	private final String[] imageDescriptions = { "巩俐不低俗，我就不能低俗",
-			"扑树又回来啦！再唱经典老歌引万人大合唱", "揭秘北京电影如何升级", "乐视网TV版大派送", "热血屌丝的反杀" };
 	private ArrayList<ImageView> imageList;
-	private TextView tv;
+	private NoInterceptViewPager viewPager;
+
+	private LinearLayout pointGroup;// 灰点和黑点的布局
+	private TextView iamgeDesc;// 描述文字
+
+	/**
+	 * 上一个页面的位置
+	 */
+	protected int lastPosition;
+
+	private int[] imageIds;
+	private String[] imageDescriptions;
+	public static Handler mHandler;// 发送消息
+	private MyToggleButton my_toggle_btn;
 
 	public NoReadPager(Activity activity) {
 		super(activity);
@@ -67,113 +71,189 @@ public class NoReadPager extends BasePager implements OnClickListener {
 		level2 = (RelativeLayout) view.findViewById(R.id.level2);
 		level3 = (RelativeLayout) view.findViewById(R.id.level3);
 
-		vp = (ViewPager) view.findViewById(R.id.vp_guide);
-		ll = (LinearLayout) view.findViewById(R.id.ll_point_group);
-		view_red_point = view.findViewById(R.id.view_red_point);
-		tv = (TextView) view.findViewById(R.id.tv);
+		viewPager = (NoInterceptViewPager) view.findViewById(R.id.viewpager);
+		pointGroup = (LinearLayout) view.findViewById(R.id.point_group);
+		iamgeDesc = (TextView) view.findViewById(R.id.image_desc);
 
-		// initViewPager();
-		// tv.setText(imageDescriptions[0]);
-		// vp.setAdapter(new GuideAdapter());
-		// vp.setOnPageChangeListener(new GuidePageListener());
+		imageIds = new int[] { R.drawable.a, R.drawable.b, R.drawable.c,
+				R.drawable.d, R.drawable.e };
+		imageDescriptions = new String[] { "巩俐不低俗，我就不能低俗",
+				"扑树又回来啦！再唱经典老歌引万人大合唱", "揭秘北京电影如何升级", "乐视网TV版大派送", "热血屌丝的反杀" };
+		iamgeDesc.setText(imageDescriptions[0]);
+
+		my_toggle_btn = (MyToggleButton) view.findViewById(R.id.my_toggle_btn);
+		my_toggle_btn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				boolean checked = my_toggle_btn.isChecked();
+				if (checked == false) {
+					isLevel1show = false;
+				} else {
+					isLevel1show = true;
+				}
+				changeLevel1State();
+				my_toggle_btn.setChecked();
+			}
+		});
+//		my_toggle_btn.onTouchEvent(event);
+
+		initViewPager();
+
 		icon_home.setOnClickListener(this);
 		icon_menu.setOnClickListener(this);
 		flContent.addView(view);
 	}
 
+	/**
+	 * ViewPager相关操作
+	 */
 	private void initViewPager() {
 		imageList = new ArrayList<ImageView>();
-		// 初始化引导页的3个页面
-		System.out.println("imageIds.length" + imageIds.length);
 		for (int i = 0; i < imageIds.length; i++) {
+
+			// 初始化图片资源
 			ImageView image = new ImageView(mActivity);
-			image.setBackgroundResource(imageIds[i]);// 设置引导页背景,注意是Resource
+			image.setBackgroundResource(imageIds[i]);
 			imageList.add(image);
-		}
-		// 初始化引导页的小圆点
-		for (int i = 0; i < imageIds.length; i++) {
-			View point = new View(mActivity);
-			point.setBackgroundResource(R.drawable.shape_point_gray);// 设置引导页默认圆点
+
+			// 添加指示点
+			ImageView point = new ImageView(mActivity);
 			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-					UiUtils.dip2px(10), UiUtils.dip2px(10));// 通过params设置布局的参数，括号里是宽高
-			if (i > 0) {
-				params.leftMargin = UiUtils.dip2px(10);// 设置圆点间隔
+					LinearLayout.LayoutParams.WRAP_CONTENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
+
+			params.rightMargin = 20;
+			point.setLayoutParams(params);
+
+			point.setBackgroundResource(R.drawable.point_bg);// 状态选择器
+			if (i == 0) {
+				point.setEnabled(true);
+			} else {
+				point.setEnabled(false);
 			}
-			point.setLayoutParams(params);// 设置圆点的大小
-			ll.addView(point);// 将圆点添加给线性布局
+			pointGroup.addView(point);
 		}
-		// 获取视图树, 对layout结束事件进行监听,获取小灰点的距离
-		ll.getViewTreeObserver().addOnGlobalLayoutListener(
-				new OnGlobalLayoutListener() {
-					// 当layout执行结束后回调此方法
-					@Override
-					public void onGlobalLayout() {
-						System.out.println("layout 结束");
-						ll.getViewTreeObserver().removeGlobalOnLayoutListener(
-								this);
-						mPointWidth = ll.getChildAt(1).getLeft()
-								- ll.getChildAt(0).getLeft();
-						System.out.println("圆点距离:" + mPointWidth);
-					}
-				});
+		viewPager.setAdapter(new MyPagerAdapter());// 设置适配器
+		viewPager.setOnPageChangeListener(new ViewPagerOnPageChange());// 设置页面改变监听的时候才设置当前的文字描述和黑点
+		viewPager.setOnTouchListener(new ViewPagerTouchListener());// 设置触摸监听，使触摸的时候不轮播
+		// 自动轮播条显示
+		if (mHandler == null) {
+			mHandler = new Handler() {
+				public void handleMessage(android.os.Message msg) {
+					viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+					// 继续延时3秒发消息,形成循环，可以handleMessage方法里发送消息的
+					mHandler.sendEmptyMessageDelayed(0, 3000);
+				};
+			};
+			mHandler.sendEmptyMessageDelayed(0, 3000);// 延时3秒后发消息
+		}
+
 	}
 
-	/**
-	 * ViewPager数据适配器
-	 * 
-	 * 
-	 */
-	class GuideAdapter extends PagerAdapter {
+	class ViewPagerOnPageChange implements OnPageChangeListener {
 		@Override
-		public int getCount() {
-			return imageIds.length;
+		/**
+		 * 页面切换后调用 
+		 * position  新的页面位置
+		 */
+		public void onPageSelected(int position) {
+
+			position = position % imageList.size();
+
+			// 设置文字描述内容
+			iamgeDesc.setText(imageDescriptions[position]);
+
+			// 改变指示点的状态
+			// 把当前点enbale 为true
+			pointGroup.getChildAt(position).setEnabled(true);
+			// 把上一个点设为false
+			pointGroup.getChildAt(lastPosition).setEnabled(false);
+			lastPosition = position;
+
 		}
 
 		@Override
-		public boolean isViewFromObject(View arg0, Object arg1) {
-			return arg0 == arg1;
-		}
-
-		@Override
-		public Object instantiateItem(ViewGroup container, int position) {
-			container.addView(imageList.get(position));
-			return imageList.get(position);
-		}
-
-		@Override
-		public void destroyItem(ViewGroup container, int position, Object object) {
-			container.removeView((View) object);
-		}
-	}
-
-	/**
-	 * viewpager的滑动监听
-	 * 
-	 * 
-	 */
-	class GuidePageListener implements OnPageChangeListener {
-		// 滑动事件
-		@Override
+		/**
+		 * 页面正在滑动的时候，回调
+		 */
 		public void onPageScrolled(int position, float positionOffset,
 				int positionOffsetPixels) {
-			// System.out.println("当前位置:" + position + ";百分比:" + positionOffset
-			// + ";移动距离:" + positionOffsetPixels);
-			int len = (int) (mPointWidth * positionOffset) + position
-					* mPointWidth;
-			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view_red_point
-					.getLayoutParams();// 获取当前红点的布局参数
-			params.leftMargin = len;// 设置左边距
-			view_red_point.setLayoutParams(params);// 重新给小红点设置布局参数
 		}
 
-		// 某个页面被选中
 		@Override
-		public void onPageSelected(int position) {
-		}
-
-		// 滑动状态发生变化
-		@Override
+		/**
+		 * 当页面状态发生变化的时候，回调
+		 */
 		public void onPageScrollStateChanged(int state) {
+
+		}
+
+	}
+
+	/**
+	 * ViewPager的触摸监听
+	 * 
+	 * 
+	 */
+	class ViewPagerTouchListener implements OnTouchListener {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				mHandler.removeCallbacksAndMessages(null);
+				break;
+			case MotionEvent.ACTION_CANCEL:
+				// 因为当按下没抬起，而是滑了一下，那么事件就取消了，需要重新发送一下
+			case MotionEvent.ACTION_UP:
+				mHandler.sendEmptyMessageDelayed(0, 3000);
+				break;
+			default:
+				break;
+			}
+			return false;// 必须返回FALSE，否则viewpager不能滑动
+		}
+	}
+
+	private class MyPagerAdapter extends PagerAdapter {
+		@Override
+		/**
+		 * 获得页面的总数
+		 */
+		public int getCount() {
+			return Integer.MAX_VALUE;
+		}
+
+		@Override
+		/**
+		 * 获得相应位置上的view
+		 */
+		public Object instantiateItem(ViewGroup container, int position) {
+			// 给 container 添加一个view
+			container.addView(imageList.get(position % imageList.size()));
+			return imageList.get(position % imageList.size());
+		}
+
+		@Override
+		/**
+		 * 判断 view和object的对应关系 
+		 */
+		public boolean isViewFromObject(View view, Object object) {
+			if (view == object) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		@Override
+		/**
+		 * 销毁对应位置上的object
+		 */
+		public void destroyItem(ViewGroup container, int position, Object object) {
+
+			container.removeView((View) object);
+			object = null;
 		}
 	}
 
@@ -221,7 +301,7 @@ public class NoReadPager extends BasePager implements OnClickListener {
 	 */
 	private void changeLevel1State() {
 		// 如果第1级菜单是显示状态，那么就隐藏 1，2，3级菜单
-		if (isLevel1show) {
+		if (isLevel1show == true) {
 			RotateUtils.startAnimOut(level1);
 			isLevel1show = false;
 
