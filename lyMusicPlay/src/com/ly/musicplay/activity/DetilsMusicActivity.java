@@ -26,6 +26,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.ly.musicplay.R;
 import com.ly.musicplay.service.BackgroundService;
 import com.ly.musicplay.service.MusicInterface;
@@ -88,7 +89,9 @@ public class DetilsMusicActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_detil_music);
-		setBehindContentView(R.layout.left_menu);// 设置侧边栏布局
+		setBehindContentView(R.layout.left_menu);// 这个得写
+		SlidingMenu slidingMenu = getSlidingMenu();
+		slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);// 取消侧边栏
 
 		Intent intent = new Intent(this, BackgroundService.class);
 		MyServiceConn conn = new MyServiceConn();

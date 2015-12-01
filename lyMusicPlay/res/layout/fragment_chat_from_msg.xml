@@ -9,6 +9,7 @@
         style="@style/chat_date_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+          android:background="@android:color/transparent"
         android:text="2012-09-01 18:30:20" />
 
     <LinearLayout

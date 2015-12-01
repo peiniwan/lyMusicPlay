@@ -6,10 +6,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -60,14 +62,25 @@ public class ArrtistPager extends BasePager {
 		int backColor = 0xffcecece;
 		Drawable pressedDrawable = DrawableUtils.createShape(backColor);// 按下显示的图片
 
-		String string = sharedPreferences.getString("arrtists", null);
-		String[] strings = string.split(",");// 只显示歌手，不显示.MP3
-
-		for (int i = 0; i < strings.length; i++) {
-			TextView textView = new TextView(UiUtils.getContext());
-			final String str = strings[i];
-			textView.setText(str);
-
+		String string = sharedPreferences.getString("arrtists", "");
+		final String arrtistPagerDate = sharedPreferences.getString(
+				"arrtistPagerDate", "");
+		// 复制一份，因为我还要修改arrtists，所以歌手列表的数据不能用它了
+		if (arrtistPagerDate.equals("")) {
+			sharedPreferences.edit().putString("arrtistPagerDate", string)
+					.commit();
+		}
+		String[] strings = arrtistPagerDate.split(",");
+		for (int i = 0; i < strings.length + 1; i++) {
+			final String str;
+			final TextView textView = new TextView(UiUtils.getContext());
+			if (i == 0) {
+				str = "全部歌曲";
+				textView.setText(str);
+			} else {
+				str = strings[i - 1];
+				textView.setText(str);
+			}
 			Random random = new Random(); // 创建随机
 			int red = random.nextInt(200) + 22;
 			int green = random.nextInt(200) + 22;
@@ -84,15 +97,26 @@ public class ArrtistPager extends BasePager {
 			int textPaddingH = UiUtils.dip2px(7);
 			textView.setPadding(textPaddingH, textPaddingV, textPaddingH,
 					textPaddingV); // padding设置了一样还是不居中？
+			// textView.setPadding(textPaddingV, textPaddingV, textPaddingV,
+			// textPaddingV);
+			// textView.setGravity(Gravity.HORIZONTAL_GRAVITY_MASK);
 
 			textView.setClickable(true);// 设置textView可以被点击
 			textView.setOnClickListener(new OnClickListener() { // 设置点击事件
 
 				@Override
 				public void onClick(View v) {
+					Editor edit = sharedPreferences.edit();
 					Toast.makeText(UiUtils.getContext(), str, 0).show();
 					Intent intent = new Intent(mActivity, MainActivity.class);
-					intent.putExtra("str", str);
+					if (textView.getText().equals("全部歌曲")) {
+						edit.putString("arrtists", arrtistPagerDate);
+						edit.putBoolean("isAllArrtist", true);
+					} else {
+						edit.putString("arrtists", str);
+						edit.putBoolean("isAllArrtist", false);
+					}
+					edit.commit();
 					mActivity.startActivity(intent);
 				}
 			});
@@ -103,4 +127,5 @@ public class ArrtistPager extends BasePager {
 		scrollView.addView(layout);
 		flContent.addView(scrollView);
 	}
+
 }

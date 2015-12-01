@@ -53,13 +53,11 @@ public class BackgroundService extends Service {
 
 	@Override
 	public void onCreate() {
+		System.out.println("服务的onCreate执行");
 		super.onCreate();
 		sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_NAME,
 				Context.MODE_PRIVATE);
 		mode = sharedPreferences.getInt(MainActivity.PREFERENCES_MODE, 0);// 播放模式默认是顺序播放
-		if (mediaPlayer == null) {
-			mediaPlayer = new MediaPlayer();
-		}
 
 		// 电话来去电广播
 		phoneReceiver = new PhoneReceiver();
@@ -109,53 +107,53 @@ public class BackgroundService extends Service {
 
 		public void play(String mp3Path) {
 			currMp3Path = mp3Path;
-			if (mediaPlayer != null) {
-				mediaPlayer.reset(); // 重置多媒体
-				try {
-					mediaPlayer.setDataSource(mp3Path);// 为多媒体对象设置播放路径
-					mediaPlayer.prepare();
-					SDPager.mAdapter.notifyDataSetChanged();
-
-					String PlayName = setPlayName(mp3Path);// 把路径截取成歌名
-					String[] split = PlayName.split("-");
-					ContentFragment.tv_musicname.setText(split[1]);// 设置当前播放的歌曲名字
-					ContentFragment.tv_musicartist.setText(split[0]);// 设置当前播放的歌手名字
-
-					// 设置play界面的专辑图片和歌曲名字
-					if (DetilsMusicActivity.detil_name != null
-							&& DetilsMusicActivity.detil_pic != null) {
-						DetilsMusicActivity.detil_name
-								.setText(setPlayName(mp3Path));
-						DetilsMusicActivity.detil_pic.setImageBitmap(MediaUtil
-								.getLargeBitmap(mp3Path,
-										getApplicationContext()));
-					}
-
-					ContentFragment.content_iv.setImageBitmap(MediaUtil
-							.getSamllBitmap(mp3Path, getApplicationContext())); // 设置首页的歌曲专辑
-					ContentFragment.play
-							.setImageResource(R.drawable.main_btn_play);// 设置播放暂停的图片
-					SDPager.showCustomView();// 再次刷新通知界面
-
-					mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
-						// 准备完成调用此方法
-						@Override
-						public void onPrepared(MediaPlayer mp) {
-							mediaPlayer.start();
-							mHandler.post(updateThread);// 递归
-						}
-					});
-
-					mediaPlayer
-							.setOnCompletionListener(new OnCompletionListener() {
-								public void onCompletion(MediaPlayer arg0) {
-									next();// 如果当前歌曲播放完毕,自动播放下一首.
-								}
-							});
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			if (mediaPlayer == null) {
+				mediaPlayer = new MediaPlayer();
 			}
+			// if (mediaPlayer != null) {
+			mediaPlayer.reset(); // 重置多媒体
+			try {
+				mediaPlayer.setDataSource(mp3Path);// 为多媒体对象设置播放路径
+				mediaPlayer.prepare();
+				SDPager.mAdapter.notifyDataSetChanged();
+
+				String PlayName = setPlayName(mp3Path);// 把路径截取成歌名
+				String[] split = PlayName.split("-");
+				ContentFragment.tv_musicname.setText(split[1]);// 设置当前播放的歌曲名字
+				ContentFragment.tv_musicartist.setText(split[0]);// 设置当前播放的歌手名字
+
+				// 设置play界面的专辑图片和歌曲名字
+				if (DetilsMusicActivity.detil_name != null
+						&& DetilsMusicActivity.detil_pic != null) {
+					DetilsMusicActivity.detil_name
+							.setText(setPlayName(mp3Path));
+					DetilsMusicActivity.detil_pic.setImageBitmap(MediaUtil
+							.getLargeBitmap(mp3Path, getApplicationContext()));
+				}
+
+				ContentFragment.content_iv.setImageBitmap(MediaUtil
+						.getSamllBitmap(mp3Path, getApplicationContext())); // 设置首页的歌曲专辑
+				ContentFragment.play.setImageResource(R.drawable.main_btn_play);// 设置播放暂停的图片
+				SDPager.showCustomView();// 再次刷新通知界面
+
+				mediaPlayer.setOnPreparedListener(new OnPreparedListener() {
+					// 准备完成调用此方法
+					@Override
+					public void onPrepared(MediaPlayer mp) {
+						mediaPlayer.start();
+						mHandler.post(updateThread);// 递归
+					}
+				});
+
+				mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+					public void onCompletion(MediaPlayer arg0) {
+						next();// 如果当前歌曲播放完毕,自动播放下一首.
+					}
+				});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			// }
 		}
 
 		/**
@@ -193,6 +191,7 @@ public class BackgroundService extends Service {
 		}
 
 		public void next() {
+			System.out.println("next  -----------------");
 			String songName = nextSong();
 			if (songName != null) {
 				play(songName);
@@ -236,7 +235,6 @@ public class BackgroundService extends Service {
 		}
 
 		public void startPause() {
-			Log.d("pause", "执行了");
 			if (mediaPlayer != null) {
 				if (mediaPlayer.isPlaying()) {
 					mediaPlayer.pause();
@@ -248,9 +246,11 @@ public class BackgroundService extends Service {
 					mediaPlayer.start();
 					ContentFragment.play
 							.setImageResource(R.drawable.main_btn_play);
-					SDPager.remoteViews.setImageViewResource(
-							R.id.paly_pause_music, R.drawable.music_play);
+					// SDPager.remoteViews.setImageViewResource(
+					// R.id.paly_pause_music, R.drawable.music_play);
 				}
+			} else {
+				play(currMp3Path);// 上一次退出停止的歌曲
 			}
 		}
 

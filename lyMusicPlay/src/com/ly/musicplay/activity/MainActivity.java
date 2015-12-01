@@ -3,6 +3,7 @@ package com.ly.musicplay.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
@@ -94,8 +95,14 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
-		ActivityCollector.finishAll();
+		// super.onBackPressed();
+		Intent intent = new Intent();
+		intent.setAction("android.intent.action.MAIN");
+		intent.addCategory("android.intent.category.HOME");
+		intent.addCategory("android.intent.category.DEFAULT");
+		intent.addCategory("android.intent.category.MONKEY");
+		startActivity(intent);
+		// 所有的activity最小化 不会执行ondestory 只执行onstop方法
 	}
 
 	/**

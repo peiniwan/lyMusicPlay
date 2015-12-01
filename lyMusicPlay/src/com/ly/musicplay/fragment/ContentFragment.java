@@ -29,6 +29,7 @@ import com.ly.musicplay.pager.BasePager;
 import com.ly.musicplay.pager.SDPager;
 import com.ly.musicplay.service.BackgroundService;
 import com.ly.musicplay.service.MusicInterface;
+import com.ly.musicplay.utils.MediaUtil;
 import com.ly.musicplay.view.HorizontalViewPager;
 
 /**
@@ -91,6 +92,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		play = (ImageView) v.findViewById(R.id.play); // 实例化播放的按钮控件
 		next = (ImageView) v.findViewById(R.id.next); // 实例化下一首歌的按钮控件
 		content_iv = (ImageView) v.findViewById(R.id.album_pic);
+
 		pre.setOnClickListener(this); // 设置上一首歌的监听器
 		play.setOnClickListener(this); // 设置播放按钮的监听器
 		next.setOnClickListener(this); // 设置下一首歌按钮的监听器
@@ -173,8 +175,12 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		});
 		// 初始化首页数据,得写这一步要不然一进去不显示页面了
 		mPagerList.get(0).initData();
-
 		mPagerList.get(1).initData();
+		// 如果完全退出重新进入的时候图片不显示了，在这里补上
+		if (BackgroundService.currMp3Path != null) {
+			content_iv.setImageBitmap(MediaUtil.getSamllBitmap(
+					BackgroundService.currMp3Path, mActivity)); // 设置首页的歌曲专辑
+		}
 
 	}
 
@@ -313,7 +319,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		mi.stop();
 		seekbar.setProgress(0);
 		seekbar.setMax(0);
-		mActivity.unregisterReceiver(SDPager.receiver);
+		mActivity.unregisterReceiver(SDPager.receiver);//取消注册通知栏，但是还有报很多错误
 		SDPager.manager.cancel(1);
 		mActivity.unbindService(conn);
 		mActivity.stopService(intent);

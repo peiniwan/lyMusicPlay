@@ -1,6 +1,7 @@
 package com.ly.musicplay.pager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
@@ -62,8 +63,10 @@ public class SDPager extends BasePager {
 
 	@Override
 	public void initData() {
-
+		System.out.println("SDPager的initData");
 		lv_sd = new ListView(mActivity);
+		// fastScrollEnabled
+		lv_sd.setFastScrollEnabled(true);
 		lv_sd.setBackgroundResource(R.drawable.sdpager);
 		sharedPreferences = mActivity.getSharedPreferences(
 				MainActivity.PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -136,40 +139,34 @@ public class SDPager extends BasePager {
 		Intent buttonPlayIntent = new Intent(
 				ServiceReceiver.NOTIFICATION_ITEM_BUTTON_PER); // ----设置上一首广播
 		PendingIntent pendButtonPlayIntent = PendingIntent.getBroadcast(
-				mActivity, 0, buttonPlayIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+				mActivity, 0, buttonPlayIntent, 0);
 		remoteViews.setOnClickPendingIntent(R.id.pre_music,
 				pendButtonPlayIntent);// ----设置上一首按钮ID监控
 
 		Intent buttonPlayIntent1 = new Intent(
 				ServiceReceiver.NOTIFICATION_ITEM_BUTTON_PLAY); // ----设置播放暂停广播
 		PendingIntent pendButtonPlayIntent1 = PendingIntent.getBroadcast(
-				mActivity, 0, buttonPlayIntent1,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+				mActivity, 0, buttonPlayIntent1, 0);
 		remoteViews.setOnClickPendingIntent(R.id.paly_pause_music,
 				pendButtonPlayIntent1);// ----设置播放暂停监控
 
 		Intent buttonPlayIntent2 = new Intent(
 				ServiceReceiver.NOTIFICATION_ITEM_BUTTON_NEXT); // ----设置下一首广播
 		PendingIntent pendButtonPlayIntent2 = PendingIntent.getBroadcast(
-				mActivity, 0, buttonPlayIntent2,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+				mActivity, 0, buttonPlayIntent2, 0);
 		remoteViews.setOnClickPendingIntent(R.id.next_music,
 				pendButtonPlayIntent2);// ----设置下一首监控
 
-		Intent resultIntent = new Intent(mActivity, MainActivity.class);// 点击图片返回activity
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(mActivity);// 这里获取PendingIntent是通过创建TaskStackBuilder对象
-		stackBuilder.addParentStack(MainActivity.class);
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-				PendingIntent.FLAG_UPDATE_CURRENT);// 表示更新的PendingIntent
+		Intent resultIntent = new Intent(mActivity, MainActivity.class);// 点击返回activity
+		PendingIntent resultPendingIntent = PendingIntent.getActivity(
+				mActivity, 0, resultIntent, 0);
 		remoteViews.setOnClickPendingIntent(R.id.music_notifi_lay,
 				resultPendingIntent);// ----设置对应的按钮ID监控
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(
 				mActivity);
 		builder.setContent(remoteViews)
-				.setSmallIcon(R.drawable.ic_notification).setOngoing(true)
+				.setSmallIcon(R.drawable.ic_notification)
 				.setTicker("music is playing");
 		Notification notify = builder.build();
 		notify.flags = Notification.FLAG_ONGOING_EVENT;// 发起正在运行事件（活动中）
@@ -182,19 +179,7 @@ public class SDPager extends BasePager {
 	private void MusicList() {
 		String arrtists = sharedPreferences.getString("arrtists", "");// 获取保存的歌手
 		List<Music> list = MusicListUtils.getMusicList(mActivity);// 获取歌曲信息集合
-		String arrtistFormOther = mActivity.getIntent().getStringExtra("str");// 获取传过来的歌手
-
-		if (arrtistFormOther != null) {// 如果歌手不等于null就显示歌手对应的歌曲
-			for (Music music : list) {
-				String name = music.getName();
-				String url = music.getUrl();
-				if (name.contains(arrtistFormOther)
-						&& url.contains(arrtistFormOther)) {
-					musicUrlList.add(url);
-					musicNameList.add(name);
-				}
-			}
-		} else {// 如果等于null就显示全部歌曲
+		if (arrtists.equals("")) {// 程序第一次进来的时候保存所有的歌手
 			for (Music music : list) {
 				String name = music.getName();
 				String arrtist = music.getArrtist();
@@ -207,10 +192,24 @@ public class SDPager extends BasePager {
 				musicUrlList.add(url);
 				musicNameList.add(name);
 			}
+		} else {
+			for (Music music : list) {
+				String name = music.getName();
+				String url = music.getUrl();
+				boolean isAllArrtist = sharedPreferences.getBoolean(
+						"isAllArrtist", false);// 当点了全部歌曲置为TRUE，显示全部歌曲
+				if (isAllArrtist == true) {
+					musicUrlList.add(url);
+					musicNameList.add(name);
+				} else if (name.contains(arrtists) && url.contains(arrtists)) {// 当点了某个歌手置为FALSE，显示歌手对应的歌曲
+					musicUrlList.add(url);
+					musicNameList.add(name);
+				}
+			}
 		}
-
 		mAdapter = new MusicAdapter();
 		// lv_sd.removeAllViews();
+		mAdapter.notifyDataSetChanged();
 		lv_sd.setAdapter(mAdapter); // 添加适配器
 		flContent.addView(lv_sd);// 将viewpage添加到FrameLayout
 	}
