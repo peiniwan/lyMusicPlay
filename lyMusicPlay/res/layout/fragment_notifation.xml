@@ -52,7 +52,7 @@
             android:src="@drawable/news_cate_arr" />
     </LinearLayout>
 
-    <com.ly.musicplay.view.HorizontalViewPager
+    <com.ly.musicplay.view.NoInterceptViewPager
         android:id="@+id/vp_menu_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

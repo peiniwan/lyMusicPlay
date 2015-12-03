@@ -75,7 +75,7 @@ public class MediaUtil {
 			} else {
 				Uri uri = ContentUris.withAppendedId(albumArtUri, albumid);
 				ParcelFileDescriptor pfd = context.getContentResolver()
-						.openFileDescriptor(uri, "r");
+						.openFileDescriptor(uri, "r");////错误
 				if (pfd != null) {
 					fd = pfd.getFileDescriptor();
 				}
@@ -151,7 +151,7 @@ public class MediaUtil {
 				in = res.openInputStream(uri);
 				return BitmapFactory.decodeStream(in, null, options);
 			} catch (FileNotFoundException e) {
-				Bitmap bm = getArtworkFromFile(context, song_id, album_id);
+				Bitmap bm = getArtworkFromFile(context, song_id, album_id);//错误
 				if (bm != null) {
 					if (bm.getConfig() == null) {
 						bm = bm.copy(Bitmap.Config.RGB_565, false);
@@ -220,7 +220,7 @@ public class MediaUtil {
 				long id = music.getId();
 				System.out.println("albumId" + albumId);
 				System.out.println("Id" + id);
-				Bitmap bitmap = getArtwork(context, id, albumId, true, true);
+				Bitmap bitmap = getArtwork(context, id, albumId, true, true);//错误
 				return bitmap;
 			}
 		}

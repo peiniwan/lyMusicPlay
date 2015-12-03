@@ -45,6 +45,7 @@ public class LeftMenuFragment extends BaseFragment {
 		menu.add("音乐中心");
 		menu.add("消息中心");
 		menu.add("地图中心");
+		menu.add("新闻中心");
 		menu.add("机器人");
 		menu.add("退出");
 		mAdapter = new MenuAdapter();
@@ -57,7 +58,7 @@ public class LeftMenuFragment extends BaseFragment {
 				Fragment newContent = null;
 				mCurrentPos = arg2;// 当前点击的菜单
 				mAdapter.notifyDataSetChanged();// 需要刷新，就会调用BaseAdapter的getview方法
-				editProcess(arg2);// 退出程序
+				// editProcess(arg2);// 退出程序
 
 				switch (arg2) {
 				case 0:
@@ -70,7 +71,14 @@ public class LeftMenuFragment extends BaseFragment {
 					newContent = new MapFargment();
 					break;
 				case 3:
+					newContent = new NewsFragment();
+					break;
+				case 4:
 					newContent = new RobotFragment();
+					break;
+				case 5:
+					MainActivity mainui = (MainActivity) mActivity;
+					mainui.finishAll();
 					break;
 				default:
 					break;
@@ -104,12 +112,12 @@ public class LeftMenuFragment extends BaseFragment {
 	 * 
 	 * @param arg2
 	 */
-	protected void editProcess(int arg2) {
-		MainActivity mainui = (MainActivity) mActivity;
-		if (arg2 == 4) {
-			mainui.finishAll();
-		}
-	}
+	// protected void editProcess(int arg2) {
+	// MainActivity mainui = (MainActivity) mActivity;
+	// if (arg2 == 5) {
+	// mainui.finishAll();
+	// }
+	// }
 
 	/**
 	 * 切换SlidingMenu的状态
@@ -158,6 +166,7 @@ public class LeftMenuFragment extends BaseFragment {
 			}
 
 			viewHolder.tv.setText(getItem(position));
+			// viewHolder.tv.setText(menu.get(position));
 			if (mCurrentPos == position) {// 判断当前绘制的view是否被选中
 				// 显示红色
 				viewHolder.tv.setEnabled(true);

@@ -20,14 +20,17 @@ public class ServiceReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+
 		Log.d("ServiceReceiver", "执行了");
 		String action = intent.getAction();
-		if (action.equals(NOTIFICATION_ITEM_BUTTON_PER)) {// ----通知栏播放按钮响应事件,但是会跳好几首歌，原因还没找到
-			ContentFragment.mi.per();
+		if (action.equals(NOTIFICATION_ITEM_BUTTON_PER)) {// ----通知栏播放按钮响应事件
+			ContentFragment.mi.per();// 在切换了歌手的时候会掉俩次？
 		} else if (action.equals(NOTIFICATION_ITEM_BUTTON_PLAY)) {// ----通知栏播放按钮响应事件
 			ContentFragment.mi.startPause();
 		} else if (action.equals(NOTIFICATION_ITEM_BUTTON_NEXT)) {// ----通知栏下一首按钮响应事件
+			System.out.println("ServiceReceiver----------next");
 			ContentFragment.mi.next();
 		}
 	}
+
 }

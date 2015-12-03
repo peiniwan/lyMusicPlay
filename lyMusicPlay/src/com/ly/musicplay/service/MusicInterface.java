@@ -7,6 +7,7 @@ package com.ly.musicplay.service;
  * 
  */
 public interface MusicInterface {
+
 	void play(String mp3Path);
 
 	void next();

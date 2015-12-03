@@ -13,12 +13,12 @@ import android.widget.ImageButton;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.ly.musicplay.R;
 import com.ly.musicplay.activity.MainActivity;
-import com.ly.musicplay.pager.AllRead;
 import com.ly.musicplay.pager.BasePager;
 import com.ly.musicplay.pager.LaJiPager;
-import com.ly.musicplay.pager.NoReadPager;
-import com.ly.musicplay.pager.ReadPager;
-import com.ly.musicplay.view.HorizontalViewPager;
+import com.ly.musicplay.pager.MorePager;
+import com.ly.musicplay.pager.RotatePager;
+import com.ly.musicplay.pager.WaterPager;
+import com.ly.musicplay.view.NoInterceptViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
@@ -30,7 +30,7 @@ import com.viewpagerindicator.TabPageIndicator;
 public class NotifactionFargment extends BaseFragment implements
 		OnClickListener {
 
-	private HorizontalViewPager mViewPager;
+	private NoInterceptViewPager mViewPager;
 	private TabPageIndicator mIndicator;// 页面上的标签
 	private ArrayList<BasePager> mPagerList;// 存放view页面
 	private List<String> tab;// //存放标签内容
@@ -40,7 +40,7 @@ public class NotifactionFargment extends BaseFragment implements
 	@Override
 	public View initViews() {
 		View view = View.inflate(mActivity, R.layout.fragment_notifation, null);
-		mViewPager = (HorizontalViewPager) view
+		mViewPager = (NoInterceptViewPager) view
 				.findViewById(R.id.vp_menu_detail);// viewpager实例
 		mIndicator = (TabPageIndicator) view.findViewById(R.id.indicator);// TabPageIndicator实例
 
@@ -55,11 +55,11 @@ public class NotifactionFargment extends BaseFragment implements
 	public void initData() {
 		super.initData();
 		mPagerList = new ArrayList<BasePager>();
-		mPagerList.add(new AllRead(mActivity));
-		mPagerList.add(new NoReadPager(mActivity));
-		mPagerList.add(new ReadPager(mActivity));
+		mPagerList.add(new RotatePager(mActivity));
+		mPagerList.add(new WaterPager(mActivity));
 		mPagerList.add(new LaJiPager(mActivity));
-		String[] objects = new String[] { "全部消息", "未读消息", "已读消息", "垃圾消息" };
+		mPagerList.add(new MorePager(mActivity));
+		String[] objects = new String[] { "旋转菜单", "绚丽水波", "已读消息", "更多介绍" };
 		tab = Arrays.asList(objects);// 转化成list
 		mViewPager.setAdapter(new MenuDetailAdapter());
 		// 将viewpager和mIndicator关联起来,必须在viewpager设置完adapter后才能调用
@@ -128,12 +128,6 @@ public class NotifactionFargment extends BaseFragment implements
 		default:
 			break;
 		}
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		// NoReadPager.mHandler.removeCallbacksAndMessages(null);// 取消轮播的handler
 	}
 
 }

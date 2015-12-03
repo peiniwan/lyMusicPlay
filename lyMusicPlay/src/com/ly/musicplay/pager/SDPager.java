@@ -65,7 +65,6 @@ public class SDPager extends BasePager {
 	public void initData() {
 		System.out.println("SDPager的initData");
 		lv_sd = new ListView(mActivity);
-		// fastScrollEnabled
 		lv_sd.setFastScrollEnabled(true);
 		lv_sd.setBackgroundResource(R.drawable.sdpager);
 		sharedPreferences = mActivity.getSharedPreferences(
@@ -169,7 +168,7 @@ public class SDPager extends BasePager {
 				.setSmallIcon(R.drawable.ic_notification)
 				.setTicker("music is playing");
 		Notification notify = builder.build();
-		notify.flags = Notification.FLAG_ONGOING_EVENT;// 发起正在运行事件（活动中）
+		// notify.flags = Notification.FLAG_ONGOING_EVENT;// 发起正在运行事件（活动中）
 		manager.notify(1, notify);
 	}
 

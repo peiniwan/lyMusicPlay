@@ -73,14 +73,6 @@ public class MyToggleButton extends View implements OnClickListener {
 				backgroundBitmap.getHeight());
 	}
 
-	// 确定位置的时候调用此方法
-	// 自定义view的时候，作用不大
-	// @Override
-	// protected void onLayout(boolean changed, int left, int top, int right,
-	// int bottom) {
-	// super.onLayout(changed, left, top, right, bottom);
-	// }
-
 	/**
 	 * 当前开关的状态 true 为开
 	 */
@@ -144,6 +136,22 @@ public class MyToggleButton extends View implements OnClickListener {
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
 
+		SwitchDrag(event);
+
+		flushView();
+
+		return true; // 将事件消费掉
+	}
+
+	public interface ShowMenu {
+		void onMenu();
+
+		public void offMenu();
+	}
+
+	// , ShowMenu showMenu
+	public void SwitchDrag(MotionEvent event) {
+
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			firstX = lastX = (int) event.getX();
@@ -170,6 +178,7 @@ public class MyToggleButton extends View implements OnClickListener {
 
 			// 在发生拖动的情况下，根据最后的位置，判断当前开关的状态
 			if (isDrag) {
+
 				int maxLeft = backgroundBitmap.getWidth() - slideBtn.getWidth(); // slideBtn
 																					// 左边届最大值
 				/*
@@ -177,17 +186,16 @@ public class MyToggleButton extends View implements OnClickListener {
 				 */
 				if (slideBtn_left > maxLeft / 2) { // 此时应为 打开的状态
 					currState = true;
+					// showMenu.onMenu();
 				} else {
 					currState = false;
+					// showMenu.offMenu();
+
 				}
 				flushState();
 			}
 			break;
 		}
-
-		flushView();
-
-		return true; // 将事件消费掉
 	}
 
 	private void flushState() {

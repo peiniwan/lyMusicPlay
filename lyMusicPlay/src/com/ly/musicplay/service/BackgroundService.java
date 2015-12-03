@@ -82,7 +82,7 @@ public class BackgroundService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
-				mBinder.startPause();// 不管是传过来的mi,还是mBinder都不行，挂了不继续唱
+				mBinder.startPause();
 				// mediaPlayer.pause();
 			} else {
 				// 如果是来电
@@ -90,7 +90,8 @@ public class BackgroundService extends Service {
 						.getSystemService(Service.TELEPHONY_SERVICE);// 电话系统服务
 				if (tManager.getCallState() == TelephonyManager.CALL_STATE_RINGING
 						&& mediaPlayer != null && mediaPlayer.isPlaying()) {
-					mediaPlayer.pause();
+					mBinder.startPause();
+//					mediaPlayer.pause();
 				}
 			}
 		}
@@ -191,10 +192,10 @@ public class BackgroundService extends Service {
 		}
 
 		public void next() {
-			System.out.println("next  -----------------");
 			String songName = nextSong();
 			if (songName != null) {
 				play(songName);
+				System.out.println("next  -----------------");
 			}
 		}
 

@@ -307,7 +307,6 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 	 */
 	@Override
 	public void onDestroy() {
-		// 在切换fargment时，按理来说onDestroy不会调用，因为我切换页面时fargment是读取以前存的，不是new出来的，可是接收调用
 		super.onDestroy();
 		Log.d("ContentFragment", "onDestroy执行了");
 	}
@@ -319,7 +318,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		mi.stop();
 		seekbar.setProgress(0);
 		seekbar.setMax(0);
-		mActivity.unregisterReceiver(SDPager.receiver);//取消注册通知栏，但是还有报很多错误
+		mActivity.unregisterReceiver(SDPager.receiver);// 取消注册通知栏，但是还有报很多错误
 		SDPager.manager.cancel(1);
 		mActivity.unbindService(conn);
 		mActivity.stopService(intent);
