@@ -6,7 +6,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
+        android:padding="3dp"
         android:orientation="horizontal" >
 
         <EditText
@@ -16,16 +17,14 @@
             android:layout_weight="1"
             android:hint="请输入关键字" />
 
-        <Button
+        <ImageButton
             android:id="@+id/bt_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
+            android:layout_width="52dp"
+            android:layout_height="match_parent"
+            android:background="@null"
             android:gravity="center"
             android:onClick="btSearch"
-            android:padding="12dp"
-            android:text="搜索"
-            android:textSize="17sp" />
+            android:src="@drawable/btn_news_search" />
     </LinearLayout>
 
     <FrameLayout

@@ -7,14 +7,16 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,19 +36,39 @@ import com.ly.musicplay.utils.SDstore;
 
 public class NewsFragment extends BaseFragment {
 
-	private EditText et_key;
-	private ListView lv_news;
+	private EditText et_key;// 搜索框
+	private ListView lv_news;// 新闻列表
+	private LinearLayout ll_loading;// 加载进度
+	private ImageButton bt_search;// 搜索按钮
+
 	private NewsAdapter mNewsAdapter;
 	private ArrayList<ItemNews> result;
-	private LinearLayout ll_loading;
-	private Button bt_search;
 	private SharedPreferences sharedPreferences;
+
+	Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 0:
+				String response = (String) msg.obj;
+				parseData(response);// 子线程刷新ui
+				ll_loading.setVisibility(View.INVISIBLE);
+				lv_news.setVisibility(View.VISIBLE);
+				break;
+			case 1:
+				Toast.makeText(mActivity, "请检查网络设置或保持网络畅通", 0).show();
+				break;
+
+			default:
+				break;
+			}
+		};
+	};
 
 	@Override
 	public View initViews() {
 		View view = View.inflate(mActivity, R.layout.fragment_news, null);
 		et_key = (EditText) view.findViewById(R.id.et_key);
-		bt_search = (Button) view.findViewById(R.id.bt_search);
+		bt_search = (ImageButton) view.findViewById(R.id.bt_search);
 		ll_loading = (LinearLayout) view.findViewById(R.id.ll_loading);
 		lv_news = (ListView) view.findViewById(R.id.lv_news);
 		return view;
@@ -94,6 +116,8 @@ public class NewsFragment extends BaseFragment {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
+		} else {
+			Toast.makeText(mActivity, "请输入关键字", 0).show();
 		}
 		return null;
 	}
@@ -105,31 +129,40 @@ public class NewsFragment extends BaseFragment {
 		final String queryUrl = getQueryUrl(key);
 		if (queryUrl != null)
 			HttpDownloader.download(queryUrl, new HttpCallbackListener() {
+				Message message = Message.obtain();
 
 				@Override
 				public void onFinish(final String response) {
 					SDstore.write2sd(queryUrl, response);// 保存数据
 					sharedPreferences.edit().putString("savekey", key).commit();// 保存搜索的字
-					mActivity.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							if (response != null) {
-								parseData(response);// 子线程刷新ui
-								ll_loading.setVisibility(View.INVISIBLE);
-								lv_news.setVisibility(View.VISIBLE);
-							}
-						}
-					});
+
+					message.what = 0;
+					message.obj = response;
+					handler.sendMessage(message);
+					// mActivity.runOnUiThread(new Runnable() {
+					// @Override
+					// public void run() {
+					// if (response != null) {
+					// parseData(response);// 子线程刷新ui
+					// ll_loading.setVisibility(View.INVISIBLE);
+					// lv_news.setVisibility(View.VISIBLE);
+					// }
+					// }
+					// });
 				}
 
 				@Override
 				public void onError(final Exception e) {
-					mActivity.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							Toast.makeText(mActivity, e.toString(), 0).show();
-						}
-					});
+					message.what = 1;
+					handler.sendMessage(message);
+					// mActivity.runOnUiThread(new Runnable() {
+					// @Override
+					// public void run() {
+					// Toast.makeText(mActivity, "请检查网络设置或保持网络畅通", 0)
+					// .show();
+					// }
+					// });
+
 				}
 			});
 	}
@@ -144,8 +177,15 @@ public class NewsFragment extends BaseFragment {
 		NewsData newsData = gson.fromJson(data, NewsData.class);
 		result = newsData.result;
 		if (result != null) {
-			mNewsAdapter = new NewsAdapter();
-			lv_news.setAdapter(mNewsAdapter);
+			if (mNewsAdapter == null) {
+				mNewsAdapter = new NewsAdapter();
+				lv_news.setAdapter(mNewsAdapter);
+			} else {
+				mNewsAdapter.notifyDataSetChanged();
+			}
+			System.out.println("	result.size()-------------" + result.size());
+		} else {
+			Toast.makeText(mActivity, "没有相关信息", 0).show();
 		}
 	}
 
@@ -164,12 +204,12 @@ public class NewsFragment extends BaseFragment {
 
 		@Override
 		public Object getItem(int position) {
-			return null;
+			return result.get(position);
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return 0;
+			return position;
 		}
 
 		@Override
