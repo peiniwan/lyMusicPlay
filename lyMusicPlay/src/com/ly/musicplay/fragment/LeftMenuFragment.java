@@ -43,7 +43,7 @@ public class LeftMenuFragment extends BaseFragment {
 		super.initData();
 		menu = new ArrayList<String>();
 		menu.add("音乐中心");
-		menu.add("消息中心");
+		menu.add("游戏中心");
 		menu.add("地图中心");
 		menu.add("新闻中心");
 		menu.add("机器人");
@@ -65,7 +65,7 @@ public class LeftMenuFragment extends BaseFragment {
 					newContent = new ContentFragment();
 					break;
 				case 1:
-					newContent = new NotifactionFargment();
+					newContent = new GameFargment();
 					break;
 				case 2:
 					newContent = new MapFargment();
@@ -106,18 +106,6 @@ public class LeftMenuFragment extends BaseFragment {
 		}
 
 	}
-
-	/**
-	 * 退出程序
-	 * 
-	 * @param arg2
-	 */
-	// protected void editProcess(int arg2) {
-	// MainActivity mainui = (MainActivity) mActivity;
-	// if (arg2 == 5) {
-	// mainui.finishAll();
-	// }
-	// }
 
 	/**
 	 * 切换SlidingMenu的状态

@@ -106,12 +106,9 @@ public class ChatMessageAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		if (chatMessage.getUrl() != null) {
-			viewHolder.ly.setVisibility(View.VISIBLE);
+			viewHolder.ly.setVisibility(View.GONE);
 			BitmapUtils bitmapUtils = new BitmapUtils(// 图片为什么显示不出来？因为bitmap没获取到，浏览器打开URL是一堆图片，可能跟这个有关系
 					BaseApplication.getApplication());
-
-			// String decode = URLDecoder
-			// .decode(chatMessage.getUrl(), "UTF-8");//解码，不知道需不要解码，解不解都能打开网页
 			// Bitmap bitmap = downloadBitmap(decode);
 			// viewHolder.iv.setImageBitmap(bitmap);
 			new BitmapTask().execute(viewHolder.iv, chatMessage.getUrl());// 启动AsyncTask,参数会在doInbackground中获取

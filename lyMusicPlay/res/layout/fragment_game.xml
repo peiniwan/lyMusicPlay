@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="消息中心"
+            android:text="游戏中心"
             android:textColor="#fff"
             android:textSize="22sp" />
 

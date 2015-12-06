@@ -1,6 +1,7 @@
 package com.ly.musicplay.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.ContentResolver;
@@ -17,9 +18,12 @@ import com.ly.musicplay.bean.Music;
  * 
  */
 public class MusicListUtils {
+
+	private static List<Music> musiclist;
+
 	public static List<Music> getMusicList(Context context) {
 
-		List<Music> musiclist = new ArrayList<Music>();
+		musiclist = new ArrayList<Music>();
 
 		// ContentProvider（内容提供者） 和 ContentResolver（内容解析器），用于管理和发布和应用程序相关的持久性数据
 		ContentResolver resolver = context.getContentResolver();
@@ -74,4 +78,33 @@ public class MusicListUtils {
 
 		return musiclist;
 	}
+
+	/**
+	 * 根据当前的歌曲路径，获取对应歌曲名字和歌手
+	 * 
+	 * @param ctx
+	 * @param mp3Path
+	 * @return
+	 */
+	public static List<String> songInfo(Context ctx, String mp3Path) {
+		if (musiclist == null) {
+			musiclist = getMusicList(ctx);
+		}
+		List<String> songNameArtist = new ArrayList<String>();
+		for (Music music : musiclist) {
+			if (music.getUrl().equals(mp3Path)) {
+				String arrtist = music.getArrtist();
+				String title = music.getTitle();
+				songNameArtist.add(arrtist);
+				songNameArtist.add(title);
+				System.out.println("songInfo------------" + arrtist
+						+ "--------" + title);
+			}
+
+		}
+
+		return songNameArtist;
+
+	}
+
 }

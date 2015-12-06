@@ -25,4 +25,5 @@ public interface MusicInterface {
 	int modeChange(int mode);// 模式变化
 	// void setHandler(Handler handler);//写在这里会报错，所以用了静态访问
 
+
 }

@@ -22,12 +22,12 @@ import com.ly.musicplay.view.NoInterceptViewPager;
 import com.viewpagerindicator.TabPageIndicator;
 
 /**
- * 消息中心
+ *游戏中心
  * 
  * @author Administrator
  * 
  */
-public class NotifactionFargment extends BaseFragment implements
+public class GameFargment extends BaseFragment implements
 		OnClickListener {
 
 	private NoInterceptViewPager mViewPager;
@@ -39,7 +39,7 @@ public class NotifactionFargment extends BaseFragment implements
 
 	@Override
 	public View initViews() {
-		View view = View.inflate(mActivity, R.layout.fragment_notifation, null);
+		View view = View.inflate(mActivity, R.layout.fragment_game, null);
 		mViewPager = (NoInterceptViewPager) view
 				.findViewById(R.id.vp_menu_detail);// viewpager实例
 		mIndicator = (TabPageIndicator) view.findViewById(R.id.indicator);// TabPageIndicator实例
@@ -59,7 +59,7 @@ public class NotifactionFargment extends BaseFragment implements
 		mPagerList.add(new WaterPager(mActivity));
 		mPagerList.add(new LaJiPager(mActivity));
 		mPagerList.add(new MorePager(mActivity));
-		String[] objects = new String[] { "旋转菜单", "绚丽水波", "已读消息", "更多介绍" };
+		String[] objects = new String[] { "旋转菜单", "绚丽水波", "正在开发", "更多介绍" };
 		tab = Arrays.asList(objects);// 转化成list
 		mViewPager.setAdapter(new MenuDetailAdapter());
 		// 将viewpager和mIndicator关联起来,必须在viewpager设置完adapter后才能调用

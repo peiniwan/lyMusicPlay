@@ -1,10 +1,12 @@
 package com.ly.musicplay.fragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +32,7 @@ import com.ly.musicplay.pager.SDPager;
 import com.ly.musicplay.service.BackgroundService;
 import com.ly.musicplay.service.MusicInterface;
 import com.ly.musicplay.utils.MediaUtil;
+import com.ly.musicplay.utils.MusicListUtils;
 import com.ly.musicplay.view.HorizontalViewPager;
 
 /**
@@ -293,12 +296,10 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 		// 如果使用服务接口在这个类的initdate来调这个方法的时候会空指针，不知道为什么，由于进了歌曲页面再出来进度条就不走了，所以这样写
 		BackgroundService.setHandler(handler);
 		if (BackgroundService.currMp3Path != null) {
-			String name = mi.setPlayName(BackgroundService.currMp3Path);
-			System.out.println("name-----------" + name);
-			String[] split = name.split("-");
-			tv_musicname.setText(split[1]);// 设置当前播放的歌曲名字
-			tv_musicartist.setText(split[0]);
-
+			List<String> songInfo = MusicListUtils.songInfo(mActivity,
+					BackgroundService.currMp3Path);
+			tv_musicname.setText(songInfo.get(1));// 设置当前播放的歌曲名字
+			tv_musicartist.setText(songInfo.get(0));
 		}
 	}
 

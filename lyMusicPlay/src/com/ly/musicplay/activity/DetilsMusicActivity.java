@@ -1,6 +1,7 @@
 package com.ly.musicplay.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,6 +32,7 @@ import com.ly.musicplay.R;
 import com.ly.musicplay.service.BackgroundService;
 import com.ly.musicplay.service.MusicInterface;
 import com.ly.musicplay.utils.MediaUtil;
+import com.ly.musicplay.utils.MusicListUtils;
 
 /**
  * 播放详情界面
@@ -106,9 +108,10 @@ public class DetilsMusicActivity extends BaseActivity implements
 		detil_mode.setImageResource(modeImage[mode]);// 一进来设置模式
 
 		// 设置歌曲名和专辑图片
-		if (BackgroundService.songName != null
-				&& BackgroundService.currMp3Path != null) {
-			detil_name.setText(BackgroundService.songName);
+		if (BackgroundService.currMp3Path != null) {
+			List<String> songInfo = MusicListUtils.songInfo(this,
+					BackgroundService.currMp3Path);
+			detil_name.setText(songInfo.get(0)+"-"+songInfo.get(1));
 			Bitmap bitmap = MediaUtil.getLargeBitmap(
 					BackgroundService.currMp3Path, this);
 			detil_pic.setImageBitmap(bitmap);

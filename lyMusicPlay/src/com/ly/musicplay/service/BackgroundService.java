@@ -1,6 +1,7 @@
 package com.ly.musicplay.service;
 
 import java.io.File;
+import java.util.List;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -26,6 +27,7 @@ import com.ly.musicplay.activity.MainActivity;
 import com.ly.musicplay.fragment.ContentFragment;
 import com.ly.musicplay.pager.SDPager;
 import com.ly.musicplay.utils.MediaUtil;
+import com.ly.musicplay.utils.MusicListUtils;
 
 /**
  * 后台播放服务
@@ -82,16 +84,16 @@ public class BackgroundService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
-				mBinder.startPause();
-				// mediaPlayer.pause();
+				mBinder.startPause();// 去电可以暂停
 			} else {
 				// 如果是来电
 				TelephonyManager tManager = (TelephonyManager) context
 						.getSystemService(Service.TELEPHONY_SERVICE);// 电话系统服务
 				if (tManager.getCallState() == TelephonyManager.CALL_STATE_RINGING
 						&& mediaPlayer != null && mediaPlayer.isPlaying()) {
-					mBinder.startPause();
-//					mediaPlayer.pause();
+					mBinder.startPause();// 来电没效果，歌曲还继续唱
+					// ContentFragment.mi.startPause();
+					// mediaPlayer.pause();
 				}
 			}
 		}
@@ -111,17 +113,16 @@ public class BackgroundService extends Service {
 			if (mediaPlayer == null) {
 				mediaPlayer = new MediaPlayer();
 			}
-			// if (mediaPlayer != null) {
 			mediaPlayer.reset(); // 重置多媒体
 			try {
 				mediaPlayer.setDataSource(mp3Path);// 为多媒体对象设置播放路径
 				mediaPlayer.prepare();
 				SDPager.mAdapter.notifyDataSetChanged();
 
-				String PlayName = setPlayName(mp3Path);// 把路径截取成歌名
-				String[] split = PlayName.split("-");
-				ContentFragment.tv_musicname.setText(split[1]);// 设置当前播放的歌曲名字
-				ContentFragment.tv_musicartist.setText(split[0]);// 设置当前播放的歌手名字
+				List<String> songInfo = MusicListUtils.songInfo(
+						getApplicationContext(), BackgroundService.currMp3Path);
+				ContentFragment.tv_musicname.setText(songInfo.get(1));// 设置当前播放的歌曲名字
+				ContentFragment.tv_musicartist.setText(songInfo.get(0));// 歌手名字
 
 				// 设置play界面的专辑图片和歌曲名字
 				if (DetilsMusicActivity.detil_name != null
@@ -154,7 +155,6 @@ public class BackgroundService extends Service {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			// }
 		}
 
 		/**

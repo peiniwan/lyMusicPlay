@@ -90,7 +90,6 @@ public class MainActivity extends BaseActivity {
 				.replace(R.id.fl_content, fragment).addToBackStack(null)
 				.commit();// 加上这个addToBackStack(null)，ondestory不会调用
 		getSlidingMenu().showContent();
-
 	}
 
 	@Override

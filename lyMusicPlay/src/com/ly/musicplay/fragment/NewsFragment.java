@@ -12,6 +12,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -63,6 +64,7 @@ public class NewsFragment extends BaseFragment {
 			}
 		};
 	};
+	private NewsData newsData;
 
 	@Override
 	public View initViews() {
@@ -127,6 +129,13 @@ public class NewsFragment extends BaseFragment {
 		lv_news.setVisibility(View.INVISIBLE);
 		final String key = et_key.getText().toString().trim();
 		final String queryUrl = getQueryUrl(key);
+		// 清空输入框
+		et_key.setText("");
+		// 隐藏输入法键盘
+		InputMethodManager imm = (InputMethodManager) mActivity
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+		// 隐藏输入法的 API
+		imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 		if (queryUrl != null)
 			HttpDownloader.download(queryUrl, new HttpCallbackListener() {
 				Message message = Message.obtain();
@@ -139,30 +148,12 @@ public class NewsFragment extends BaseFragment {
 					message.what = 0;
 					message.obj = response;
 					handler.sendMessage(message);
-					// mActivity.runOnUiThread(new Runnable() {
-					// @Override
-					// public void run() {
-					// if (response != null) {
-					// parseData(response);// 子线程刷新ui
-					// ll_loading.setVisibility(View.INVISIBLE);
-					// lv_news.setVisibility(View.VISIBLE);
-					// }
-					// }
-					// });
 				}
 
 				@Override
 				public void onError(final Exception e) {
 					message.what = 1;
 					handler.sendMessage(message);
-					// mActivity.runOnUiThread(new Runnable() {
-					// @Override
-					// public void run() {
-					// Toast.makeText(mActivity, "请检查网络设置或保持网络畅通", 0)
-					// .show();
-					// }
-					// });
-
 				}
 			});
 	}
@@ -174,16 +165,18 @@ public class NewsFragment extends BaseFragment {
 	 */
 	protected void parseData(String data) {
 		Gson gson = new Gson();
-		NewsData newsData = gson.fromJson(data, NewsData.class);
-		result = newsData.result;
-		if (result != null) {
+
+		newsData = gson.fromJson(data, NewsData.class);
+
+		if (newsData.result != null) {
+			result = newsData.result;
+			System.out.println("------------执行了");
 			if (mNewsAdapter == null) {
 				mNewsAdapter = new NewsAdapter();
 				lv_news.setAdapter(mNewsAdapter);
 			} else {
 				mNewsAdapter.notifyDataSetChanged();
 			}
-			System.out.println("	result.size()-------------" + result.size());
 		} else {
 			Toast.makeText(mActivity, "没有相关信息", 0).show();
 		}
