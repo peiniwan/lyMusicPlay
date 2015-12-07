@@ -22,6 +22,8 @@ public class SplashActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_aplash);
 		RelativeLayout rlRoot = (RelativeLayout) findViewById(R.id.rl_roots);
+		
+		
 		Handler handler = new Handler();
 		// 重写进程里面的run方法，当启动进程是就会主动条用run方法
 		Runnable runnable = new Runnable() {

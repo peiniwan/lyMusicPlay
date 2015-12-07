@@ -62,9 +62,17 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PageIndicatorDefaults" />
-        <activity android:name=".activity.DetilsMusicActivity" />
-        <activity android:name=".activity.WebActivity" />
+        <activity
+            android:name=".activity.DetilsMusicActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.WebActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <service android:name=".service.BackgroundService" >
         </service>

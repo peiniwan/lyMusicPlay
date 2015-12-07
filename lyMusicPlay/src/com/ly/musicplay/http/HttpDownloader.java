@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * 访问网络存放歌曲信息的文件 解析出来就知道需要下载哪首歌了
+ * 网络访问工具类
  * 
  * @author Administrator
  * 
@@ -39,8 +39,8 @@ public class HttpDownloader {
 					url = new URL(urlStr);
 					urlConn = (HttpURLConnection) url.openConnection();
 					urlConn.setRequestMethod("GET");
-					urlConn.setReadTimeout(5000);
-					urlConn.setConnectTimeout(5000);
+					urlConn.setReadTimeout(8000);
+					urlConn.setConnectTimeout(8000);
 					urlConn.setDoInput(true);
 					urlConn.setDoOutput(true);
 					// urlConn.connect();
