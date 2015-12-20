@@ -82,13 +82,6 @@ public class MyToggleButton extends View implements OnClickListener {
 		return currState;
 	}
 
-	public void setChecked() {
-		if (!isDrag) {
-			currState = !currState;
-			flushState();
-		}
-	}
-
 	@Override
 	/**
 	 * 绘制当前view的内容
@@ -118,6 +111,11 @@ public class MyToggleButton extends View implements OnClickListener {
 		 * 如果没有拖动，才执行改变状态的动作
 		 */
 		if (!isDrag) {
+			if (isChecked() == true) {
+				listener.offMenu();
+			} else {
+				listener.onMenu();
+			}
 			currState = !currState;
 			flushState();
 		}
@@ -143,13 +141,19 @@ public class MyToggleButton extends View implements OnClickListener {
 		return true; // 将事件消费掉
 	}
 
+	private ShowMenu listener;
+
 	public interface ShowMenu {
 		void onMenu();
 
-		public void offMenu();
+		void offMenu();
 	}
 
-	// , ShowMenu showMenu
+	public void setShowMenu(ShowMenu l) {
+		listener = l;
+	}
+
+	//
 	public void SwitchDrag(MotionEvent event) {
 
 		switch (event.getAction()) {
@@ -186,11 +190,10 @@ public class MyToggleButton extends View implements OnClickListener {
 				 */
 				if (slideBtn_left > maxLeft / 2) { // 此时应为 打开的状态
 					currState = true;
-					// showMenu.onMenu();
+					listener.onMenu();
 				} else {
 					currState = false;
-					// showMenu.offMenu();
-
+					listener.offMenu();
 				}
 				flushState();
 			}

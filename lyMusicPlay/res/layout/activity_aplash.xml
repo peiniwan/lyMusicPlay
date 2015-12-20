@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="120dp"
-        android:text="LY音乐播放器"
+        android:text="Plus音乐"
         android:textSize="35sp" />
 
     <TextView

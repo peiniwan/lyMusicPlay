@@ -1,4 +1,4 @@
-package com.ly.musicplay.fragment;
+package com.ly.musicplay.adapter;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;

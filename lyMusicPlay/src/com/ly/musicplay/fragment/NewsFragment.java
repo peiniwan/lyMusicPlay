@@ -33,6 +33,7 @@ import com.ly.musicplay.bean.NewsData;
 import com.ly.musicplay.bean.NewsData.ItemNews;
 import com.ly.musicplay.http.HttpCallbackListener;
 import com.ly.musicplay.http.HttpDownloader;
+import com.ly.musicplay.utils.MyBitmapUtils;
 import com.ly.musicplay.utils.SDstore;
 
 public class NewsFragment extends BaseFragment {
@@ -183,11 +184,11 @@ public class NewsFragment extends BaseFragment {
 	}
 
 	class NewsAdapter extends BaseAdapter {
-		private BitmapUtils utils;
+		private MyBitmapUtils utils;
 
 		public NewsAdapter() {
-			utils = new BitmapUtils(mActivity);
-			utils.configDefaultLoadingImage(R.drawable.news_default);
+			utils = new MyBitmapUtils();
+			// utils.configDefaultLoadingImage(R.drawable.news_default);
 		}
 
 		@Override

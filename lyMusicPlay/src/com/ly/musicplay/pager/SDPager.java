@@ -61,7 +61,6 @@ public class SDPager extends BasePager {
 
 	@Override
 	public void initData() {
-		System.out.println("SDPager的initData");
 		lv_sd = new ListView(mActivity);
 		lv_sd.setFastScrollEnabled(true);
 		lv_sd.setBackgroundResource(R.drawable.sdpager);
@@ -112,9 +111,11 @@ public class SDPager extends BasePager {
 		Log.d("showCustomView", "执行了");
 		remoteViews = new RemoteViews(mActivity.getPackageName(),
 				R.layout.notyfiction);
-		remoteViews.setTextViewText(R.id.title_music_name,
-				BackgroundService.songName); // 设置textview
-		if (BackgroundService.currMp3Path != null) {// 设置专辑图片
+		if (BackgroundService.currMp3Path != null) {
+			List<String> songInfo = MusicListUtils.songInfo(mActivity,
+					BackgroundService.currMp3Path);
+			remoteViews.setTextViewText(R.id.title_music_name, songInfo.get(0)
+					+ "-" + songInfo.get(1));
 			Bitmap bitmap = MediaUtil.getSamllBitmap(
 					BackgroundService.currMp3Path, mActivity);
 			remoteViews.setImageViewBitmap(R.id.songer_pic, bitmap);
@@ -211,6 +212,12 @@ public class SDPager extends BasePager {
 		flContent.addView(lv_sd);// 将viewpage添加到FrameLayout
 	}
 
+	/**
+	 * 歌曲列表适配器，写在外面将songnum传进去，点歌曲不变红色了，现在先这样写
+	 * 
+	 * @author Administrator
+	 * 
+	 */
 	public class MusicAdapter extends BaseAdapter {
 
 		@Override

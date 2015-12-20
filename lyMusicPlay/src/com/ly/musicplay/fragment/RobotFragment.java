@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.ly.musicplay.R;
+import com.ly.musicplay.adapter.ChatMessageAdapter;
 import com.ly.musicplay.bean.ChatMessage;
 import com.ly.musicplay.bean.ChatMessage.Type;
 import com.ly.musicplay.http.HttpUtils;

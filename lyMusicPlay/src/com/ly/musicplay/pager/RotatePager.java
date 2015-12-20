@@ -83,44 +83,22 @@ public class RotatePager extends BasePager implements OnClickListener {
 		iamgeDesc.setText(imageDescriptions[0]);
 
 		my_toggle_btn = (MyToggleButton) view.findViewById(R.id.my_toggle_btn);
-		my_toggle_btn.setOnClickListener(new OnClickListener() {
 
+		my_toggle_btn.setShowMenu(new ShowMenu() {
+			
 			@Override
-			public void onClick(View v) {
-				boolean checked = my_toggle_btn.isChecked();
-				if (checked == false) {
-					isLevel1show = false;
-				} else {
-					isLevel1show = true;
-				}
+			public void onMenu() {
+				isLevel1show = false;			
 				changeLevel1State();
-				my_toggle_btn.setChecked();
+			}
+			
+			@Override
+			public void offMenu() {
+				isLevel1show = true;
+				changeLevel1State();
 			}
 		});
-//		my_toggle_btn.setOnTouchListener(new OnTouchListener() {
-//
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				my_toggle_btn.SwitchDrag(event, new ShowMenu() {
-//
-//					@Override
-//					public void onMenu() {
-//						isLevel1show = true;
-//						// changeLevel1State();
-//					}
-//
-//					@Override
-//					public void offMenu() {
-//						isLevel1show = false;
-//
-//						// changeLevel1State();
-//					}
-//
-//				});
-//
-//				return false;
-//			}
-//		});
+
 		initViewPager();
 
 		icon_home.setOnClickListener(this);

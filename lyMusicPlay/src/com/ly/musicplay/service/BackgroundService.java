@@ -55,7 +55,6 @@ public class BackgroundService extends Service {
 
 	@Override
 	public void onCreate() {
-		System.out.println("服务的onCreate执行");
 		super.onCreate();
 		sharedPreferences = getSharedPreferences(MainActivity.PREFERENCES_NAME,
 				Context.MODE_PRIVATE);

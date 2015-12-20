@@ -9,7 +9,7 @@
         android:id="@+id/rg_group"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/top2"
+        android:background="#59B5E6"
         android:orientation="horizontal" >
 
         <RadioButton
