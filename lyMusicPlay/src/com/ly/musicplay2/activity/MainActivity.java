@@ -9,7 +9,7 @@ import android.view.Window;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 import com.ly.musicplay2.fragment.ContentFragment;
 import com.ly.musicplay2.fragment.RightMenuFragment;
 

@@ -17,7 +17,7 @@ import com.baidu.mapapi.map.MyLocationConfigeration;
 import com.baidu.mapapi.map.MyLocationConfigeration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 import com.ly.musicplay2.utils.MyOrientationListener;
 import com.ly.musicplay2.utils.MyOrientationListener.OnOrientationListener;
 

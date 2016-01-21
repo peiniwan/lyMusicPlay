@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/playpic" >
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dip"
+        android:gravity="center_vertical"
+        android:paddingLeft="1.0dip"
+        android:paddingRight="1.0dip"
+        android:paddingTop="5.0dip" >
+
+        <ImageButton
+            android:id="@+id/detil_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/player_btn_return_style" />
+
+        <TextView
+            android:id="@+id/detil_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="2.0dip"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="22.0sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/detil_pic"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/player_cover_bg"
+        android:clickable="true"
+        android:padding="3.0dip"
+        android:src="@drawable/player_cover_default" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100.0dip"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20.0dip"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/detil_current"
+                android:layout_width="50.0dip"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:paddingRight="8.0dip"
+                android:textColor="@color/white"
+                android:textSize="13.0sp"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:id="@+id/detil_seek"
+                android:layout_width="200.0dip"
+                android:layout_height="15.0dip"
+                android:max="0"
+                android:paddingTop="1.0dip"
+                android:progress="0"
+                android:progressDrawable="@drawable/player_seekbar_style"
+                android:thumb="@null" />
+
+            <TextView
+                android:id="@+id/detil_total"
+                android:layout_width="50.0dip"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingLeft="8.0dip"
+                android:textColor="@color/white"
+                android:textSize="13.0sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="7.0dip"
+            android:paddingRight="7.0dip" >
+
+            <ImageButton
+                android:id="@+id/detil_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:src="@drawable/player_btn_mode_normal_style" />
+
+            <ImageButton
+                android:id="@+id/detil_pre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:src="@drawable/player_btn_previous_style" />
+
+            <ImageButton
+                android:id="@+id/detil_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:src="@drawable/player_btn_pause_style" />
+
+            <ImageButton
+                android:id="@+id/detil_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:src="@drawable/player_btn_next_style" />
+
+            <ImageButton
+                android:id="@+id/detil_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:src="@drawable/player_btn_favorite_nostar_style" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

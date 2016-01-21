@@ -24,7 +24,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 import com.ly.musicplay2.pager.BasePager;
 import com.ly.musicplay2.pager.HttpPager;
 import com.ly.musicplay2.pager.SDPager;
@@ -85,7 +85,7 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 
 		pre = (ImageView) v.findViewById(R.id.pre); // 实例化上一首歌的按钮控件
 		play = (ImageView) v.findViewById(R.id.play); // 实例化播放的按钮控件
-		stop = (ImageView) v.findViewById(R.id.play_mode_all); // 实例化停止的按钮控件
+//		stop = (ImageView) v.findViewById(R.id.play_mode_all); // 实例化停止的按钮控件
 		next = (ImageView) v.findViewById(R.id.next); // 实例化下一首歌的按钮控件
 		seekbar = (SeekBar) v.findViewById(R.id.sb); // 实例化进度条的按钮控件
 
@@ -243,9 +243,9 @@ public class ContentFragment extends BaseFragment implements OnClickListener {
 			mi.next();
 
 			break;
-		case R.id.play_mode_all:
-			// mi.stop();
-			break;
+//		case R.id.play_mode_all:
+//			// mi.stop();
+//			break;
 		}
 	}
 

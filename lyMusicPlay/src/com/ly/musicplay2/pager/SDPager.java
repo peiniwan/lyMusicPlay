@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 import com.ly.musicplay2.activity.MainActivity;
 import com.ly.musicplay2.fragment.ContentFragment;
 import com.ly.musicplay2.receive.ServiceReceiver;

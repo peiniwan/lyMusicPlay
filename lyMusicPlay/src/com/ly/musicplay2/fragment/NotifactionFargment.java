@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 import com.ly.musicplay2.activity.MainActivity;
 import com.viewpagerindicator.TabPageIndicator;
 

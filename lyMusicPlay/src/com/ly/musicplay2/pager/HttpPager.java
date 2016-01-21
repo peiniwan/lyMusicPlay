@@ -25,7 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 import com.ly.musicplay2.bean.Mp3Info;
 import com.ly.musicplay2.http.HttpCallbackListener;
 import com.ly.musicplay2.http.HttpDownloader;

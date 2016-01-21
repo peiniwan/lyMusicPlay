@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 
 /**
  * 闪屏页

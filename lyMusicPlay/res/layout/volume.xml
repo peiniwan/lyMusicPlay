@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@drawable/player_volume_bg"
+    android:gravity="center" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/player_volume_img_small" />
+
+    <SeekBar
+        android:id="@+id/pupup_volume_seek"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="26dp"
+        android:paddingRight="26dp"
+        android:progressDrawable="@drawable/player_volume_seekbar_style"
+        android:thumb="@drawable/player_volume_seekbar_thumb_style"
+        android:thumbOffset="24dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/player_volume_img_big" />
+
+</LinearLayout>

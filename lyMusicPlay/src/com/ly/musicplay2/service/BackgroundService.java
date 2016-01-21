@@ -17,7 +17,7 @@ import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 import com.ly.musicplay2.fragment.ContentFragment;
 import com.ly.musicplay2.pager.SDPager;
 

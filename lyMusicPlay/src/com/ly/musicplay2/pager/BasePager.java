@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.ly.musicplay2.R;
+import com.ly.musicplay.R;
 
 /**
  * 音乐中心viewpager基类
